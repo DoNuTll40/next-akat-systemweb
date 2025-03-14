@@ -4,8 +4,8 @@ import Providers from "./providers";
 import { GoogleAnalytics } from "@next/third-parties/google"
 
 export const metadata = {
-  title: "ระบบลงเวลา",
-  description: "ระบบลงเวลา",
+  title: "ระบบจัดการเว็บไซต์",
+  description: "ระบบจัดการเว็บไซต์",
   icons: {
     icon: [
       {

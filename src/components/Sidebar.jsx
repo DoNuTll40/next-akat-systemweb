@@ -4,6 +4,7 @@ import SideHook from "@/hooks/SideHook.mjs";
 import { BookText, ChevronDown, ChevronRight, CircleUser, House, LayoutDashboard, Lock, LockOpen, Minus, Settings, ShieldUser } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 
 export default function SideBar() {
@@ -116,6 +117,27 @@ export default function SideBar() {
           <div className="my-2 flex flex-col gap-1.5 px- overflow-auto">
             {(role?.toLowerCase() === "admin" ? adminSideBar : userSideBar).map((item, index) => (
               <div key={index}>
+                {item.submenu ? (
+                  <button
+                      className={`flex w-full justify-between items-center gap-2 p-2 pl-3 rounded-l-full transition 
+                      ${isActive(item) ? "bg-gradient-to-t from-[#19498A] to-[#205cb0] text-white" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
+                      onClick={(e) => {
+                      e.preventDefault(); // ป้องกันการเปลี่ยนหน้า
+                      handleSubmenuToggle(index); // เปิด/ปิดเมนูย่อย
+                    }}
+                  >
+                    <div className="flex gap-1.5">
+                      <span>{item.icon}</span>
+                      <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
+                    </div>
+                    <ChevronDown
+                      className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
+                      size={16}
+                      strokeWidth={1}
+                    />
+                    {item.status && user?.status !== item.status ? item.lock : item.unLock}
+                  </button>
+                ) : (
                   <Link
                     href={item.submenu ? "" : item.path}
                     className={`flex justify-between items-center gap-2 p-2 pl-3 rounded-l-full transition 
@@ -140,6 +162,7 @@ export default function SideBar() {
                   )}
                   {item.status && user?.status !== item.status ? item.lock : item.unLock}
                 </Link>
+                )}
                 {item.submenu && submenuOpen === index && (!isMini || onHover) && (
                   <div className="pl-4 not-dark:shadow-inner shadow-gray-200 rounded-tl-2xl">
                     {item.submenu.map((submenuItem, subIndex) => (
