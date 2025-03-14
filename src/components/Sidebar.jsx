@@ -166,7 +166,7 @@ export default function SideBar() {
                 {item.submenu && submenuOpen === index && (!isMini || onHover) && (
                   <div className="pl-4 not-dark:shadow-inner shadow-gray-200 rounded-tl-2xl">
                     {item.submenu.map((submenuItem, subIndex) => (
-                      <Link href={submenuItem.path} className={`flex items-center gap-2 p-2 rounded-md transition
+                      <Link href={submenuItem.path} className={`flex items-center gap-2 p-2 pl-4 rounded-l-full transition
                         ${pathname === submenuItem.path ? "bg-blue-400 dark:bg-blue-500 border border-blue-700 text-white" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}>
                         <span className="flex items-center">- {submenuItem.name}</span>
                       </Link>
