@@ -1,5 +1,7 @@
 "use client";
 
+import { AppContextProvider } from "@/contexts/AppContext";
+import { AuthContextProvider } from "@/contexts/AuthContext";
 import { SidebarContextProvider } from "@/contexts/SidebarContext";
 import NextTopLoader from "nextjs-toploader";
 import { PrimeReactProvider } from "primereact/api";
@@ -12,12 +14,16 @@ export default function Providers({ children }) {
   };
 
   return (
-    <SidebarContextProvider>
-      <PrimeReactProvider value={value}>
-        <NextTopLoader showSpinner={false}/>
-          <ToastContainer autoClose={2000} closeOnClick />
-          {children}
-      </PrimeReactProvider>
-    </SidebarContextProvider>
+    <AppContextProvider>
+      <AuthContextProvider>
+        <SidebarContextProvider>
+          <PrimeReactProvider value={value}>
+            <NextTopLoader showSpinner={false}/>
+              <ToastContainer autoClose={2000} theme="colored" closeOnClick />
+              {children}
+          </PrimeReactProvider>
+        </SidebarContextProvider>
+      </AuthContextProvider>
+    </AppContextProvider>
   );
 }

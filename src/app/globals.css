@@ -30,6 +30,75 @@ body {
 .Toastify__toast {
   font-family: "Sarabun", sans-serif !important;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-fadeInDown {
+  animation: fadeInDown 0.25s ease-in-out forwards;
+}
+
+@keyframes popUp {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-popUp {
+  animation: popUp 0.1s ease-out;
+}
+
 input:focus {
   outline: none;
 }
+
+/* p-inputotp */
+.p-inputotp {
+  @apply flex items-center gap-2 select-none;
+}
+
+/* p-inputtext */
+.p-inputtext {
+  @apply text-center w-10 py-3 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-800 focus:border-green-800 transition;
+}
+
+/* กรณีที่เน้นสถานะที่โฟกัส */
+.p-inputtext:enabled:focus {
+  @apply border-green-800;
+}
+
+/* กำหนดสี border ปกติ */
+.p-inputtext:enabled {
+  @apply border-gray-300;
+}
+
+.ant-dropdown-menu-item {
+  @apply font-sarabun
+}
+

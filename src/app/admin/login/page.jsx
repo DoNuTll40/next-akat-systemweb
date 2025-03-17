@@ -2,9 +2,9 @@ import FormLogin from "./FormLogin";
 
 export default function page() {
   return (
-    <div className="">
+    <div className="select-none">
       <div className="flex gap-2 justify-center items-center my-2">
-        <img className="max-w-[80px]" src="http://akathospital.com/assets/images/moph-sm.png" alt="logo" />
+        <img className="max-w-[80px] pointer-events-none" src="http://akathospital.com/assets/images/moph-sm.png" alt="logo" />
       </div>
       <h1 className="text-center font-semibold text-xl">เข้าสู่ระบบ</h1>
       <FormLogin />

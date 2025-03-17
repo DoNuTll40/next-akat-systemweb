@@ -1,6 +1,7 @@
 {
   "name": "shift-project",
   "version": "0.1.0",
+  "main": "main/main.js",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -12,7 +13,9 @@
     "@next/third-parties": "^15.2.2",
     "@tailwindcss/forms": "^0.5.10",
     "antd": "^5.24.3",
+    "axios": "^1.8.3",
     "crypto-js": "^4.2.0",
+    "electron-serve": "^2.1.1",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.479.0",
     "next": "15.2.2",
@@ -25,6 +28,9 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "concurrently": "^9.1.2",
+    "electron": "^35.0.1",
+    "electron-builder": "^25.1.8",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
     "tailwindcss": "^4"

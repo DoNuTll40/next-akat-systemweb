@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export default function notFound() {
   return (
@@ -5,6 +6,7 @@ export default function notFound() {
         <div className="flex flex-col items-center">
             <h1 className="text-8xl font-notothai font-black drop-shadow-lg">404</h1>
             <p className="text-2xl font-semibold">Page Not Found</p>
+            <Link href={"/admin"} >admin</Link>
         </div>
     </div>
   )
