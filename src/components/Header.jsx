@@ -58,7 +58,7 @@ export default function Header() {
               getPopupContainer={(trigger) => trigger.parentElement || document.body}
               className="font-sans"
             >
-              <Avatar className="hover:cursor-pointer" onClick={(e) => e.preventDefault()} size={40} />
+              <Avatar className="hover:cursor-pointer shadow hover:opacity-80" src="https://provider.id.th/assets/user-dbff659c.png" onClick={(e) => e.preventDefault()} size={40} />
             </Dropdown>
             </div>
         </div>

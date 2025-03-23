@@ -7,6 +7,7 @@ const AuthContext = createContext();
 
 function AuthContextProvider({ children }) {
   const [showModalOtp, setShowModalOtp] = useState(false);
+  const [errMsg, setErrMsg] = useState("")
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
@@ -83,7 +84,7 @@ function AuthContextProvider({ children }) {
     }
   }
 
-  const value = { inputLogin, setInputLogin, showModalOtp, setShowModalOtp, login, verify, logout, user, loading, setLoading, setToken };
+  const value = { inputLogin, setInputLogin, showModalOtp, setShowModalOtp, login, verify, logout, user, loading, setLoading, setToken, errMsg, setErrMsg };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

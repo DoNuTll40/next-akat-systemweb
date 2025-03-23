@@ -98,7 +98,40 @@ input:focus {
   @apply border-gray-300;
 }
 
-.ant-dropdown-menu-item {
+.ant-dropdown-menu-item, .ant-table-content, .ant-picker-dropdown, .ant-pagination {
+  @apply font-sarabun;
+}
+
+.ant-picker-dropdown {
+  @apply z-10
+}
+
+.ant-picker-input {
+  @apply py-1
+}
+
+.ant-tooltip-open, .ant-tag {
   @apply font-sarabun
 }
 
+.ant-table-thead {
+  @apply text-[0.9rem]
+}
+
+.ant-table-thead > tr > th {
+  background-color: #1C398E !important;
+  color: white !important;
+}
+
+.ant-table-column-sorter, 
+.ant-table-filter-trigger {
+  color: white !important;
+}
+
+.ant-table-filter-trigger.active {
+  color: dodgerblue !important;
+}
+
+.ant-empty-description {
+  @apply font-sarabun font-black text-[0.95rem]
+}

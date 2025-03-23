@@ -12,17 +12,33 @@ export default function ProtectedAdminRoute({ children }) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // ป้องกัน Hydration Error
+    setIsClient(true);
 
-    if (!loading && (!user || !user.position)) {
-      router.replace("/admin/login");
+    // ถ้าการโหลดเสร็จแล้ว และไม่มี user หรือ user ไม่มี position
+    if (!loading) {
+      if (!user || !user.position) {
+        // redirect ไปหน้า login เมื่อ user ไม่ได้ login
+        router.replace("/admin/auth/login");
+      }
+      // ไม่ต้อง redirect ถ้า user เป็น admin (จะตรวจสอบใน return ข้างล่าง)
     }
-
   }, [user, loading, router]);
 
+  // ถ้ากำลังโหลด หรือยังไม่ใช่ client-side
   if (loading || !isClient) {
     return <LoadingPage />;
   }
 
-  return user?.status?.toLowerCase() === "admin" ? <>{children}</> : <Forbidden />;
+  // ถ้ามี user และ status เป็น admin ให้แสดง children
+  // ถ้าไม่ใช่ admin ให้แสดง forbidden
+  if (!user) {
+    // ถ้าไม่มี user จะไม่มาถึงจุดนี้ เพราะถูก redirect ไปแล้วใน useEffect
+    return <LoadingPage />;
+  }
+
+  return user?.status?.toLowerCase() === "admin" ? (
+    <>{children}</>
+  ) : (
+    <Forbidden />
+  );
 }

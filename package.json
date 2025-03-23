@@ -16,14 +16,18 @@
     "axios": "^1.8.3",
     "crypto-js": "^4.2.0",
     "electron-serve": "^2.1.1",
+    "file-saver": "^2.0.5",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.479.0",
     "next": "15.2.2",
     "nextjs-toploader": "^3.7.15",
     "primereact": "^10.9.3",
     "react": "^19.0.0",
+    "react-data-table-component": "^7.7.0",
     "react-dom": "^19.0.0",
-    "react-toastify": "^11.0.5"
+    "react-idle-timer": "^5.7.2",
+    "react-toastify": "^11.0.5",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

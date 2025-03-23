@@ -5,15 +5,16 @@ import { cryptoEncode } from "@/configs/crypto.mjs";
 import AuthHook from "@/hooks/AuthHook.mjs";
 import { Spin } from "antd";
 import { Eye, EyeOff, Info, LogIn, RectangleEllipsis, UserRound } from "lucide-react";
+import Link from "next/link";
 import { Button } from "primereact/button";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function FormLogin() {
-    const { login, inputLogin, setInputLogin, showModalOtp, setShowModalOtp, setToken } = AuthHook();
+    const { login, inputLogin, setInputLogin, showModalOtp, setShowModalOtp, setToken, errMsg, setErrMsg } = AuthHook();
     const [showPassword, setShowPassword] = useState(false);
     const [loadingButton, setLoadingButton] = useState(false);
-    const [errMsg, setErrMsg] = useState("")
+    const [shift, setShift] = useState(1);
 
     const hdlSubmit = async (e) => {
         e.preventDefault();
@@ -62,7 +63,7 @@ export default function FormLogin() {
                     </div>
                     <input 
                         name="username"
-                        value={inputLogin.username}
+                        value={inputLogin?.username}
                         className="w-full rounded-md transition py-2 text-md md:text-sm" 
                         onChange={hdlChange} 
                         placeholder="ชื่อผู้ใช้งาน" 
@@ -82,7 +83,7 @@ export default function FormLogin() {
                         </div>
                         <input 
                             name="password"
-                            value={inputLogin.password}
+                            value={inputLogin?.password}
                             className="w-full rounded-md transition py-2 text-md md:text-sm" 
                             onChange={hdlChange} 
                             placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;" 
@@ -108,6 +109,8 @@ export default function FormLogin() {
                         </div>
                     } />
                 </div>
+                <Link className="text-center text-xs mt-5 hover:underline underline-offset-2 hover:text-blue-800 transition" href={"/admin/auth/sign-in"}>สร้างผู้ใช้งาน</Link>
+
             </form>
         </div>
     )

@@ -1,11 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    basePath: "/hospital",
-    assetPrefix: '/hospital',
     output: "export",
+    basePath: "/hospital",
+    assetPrefix: "/hospital",
+    trailingSlash: true,
+    skipTrailingSlashRedirect: true,
+    reactStrictMode: true,
     images: {
-        unoptimized: true
-    }
+        unoptimized: true,
+    },
 };
 
 export default nextConfig;
