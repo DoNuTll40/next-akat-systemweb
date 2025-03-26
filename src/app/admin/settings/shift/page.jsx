@@ -3,7 +3,7 @@
 import GenericModal from "@/components/modals/GenericModal";
 import axios from "@/configs/axios.mjs";
 import { convertDateTime } from "@/services/convertDate";
-import { Empty, Table } from "antd";
+import { Empty, Popconfirm, Table } from "antd";
 import { CirclePlus, ListChecks } from "lucide-react";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
@@ -190,12 +190,19 @@ export default function page() {
           >
             แก้ไข
           </button>
-          <button
-            onClick={() => handleDelete(record)}
-            className="text-red-500 hover:cursor-pointer hover:underline"
+          <Popconfirm
+            title="คุณต้องการลบข้อมูล"
+            description="ยืนยันที่จะลบข้อมูลใช่หรือไม่"
+            placement="topLeft"
+            onConfirm={ () => handleDelete(record)}
+            onCancel={() => console.log("ยกเลิก")}
+            okText="ยืนยัน"
+            cancelText="ยกเลิก"
           >
-            ลบ
-          </button>
+            <button className="text-red-500 hover:cursor-pointer hover:underline">
+              ลบ
+            </button>
+          </Popconfirm>
         </div>
       ),
       width: "8rem",

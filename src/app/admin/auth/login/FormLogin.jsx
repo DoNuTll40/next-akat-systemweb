@@ -14,13 +14,11 @@ export default function FormLogin() {
     const { login, inputLogin, setInputLogin, showModalOtp, setShowModalOtp, setToken, errMsg, setErrMsg } = AuthHook();
     const [showPassword, setShowPassword] = useState(false);
     const [loadingButton, setLoadingButton] = useState(false);
-    const [shift, setShift] = useState(1);
 
     const hdlSubmit = async (e) => {
         e.preventDefault();
         setLoadingButton(true)
         try {
-
             const rs = await login();
 
             if(rs.status === 200){
@@ -29,7 +27,6 @@ export default function FormLogin() {
                 setToken(rs.data.token)
                 setShowModalOtp(true)
             }
-
         } catch (err) {
             setErrMsg(err.response?.data.message)
             toast.error(err.response?.data.message)

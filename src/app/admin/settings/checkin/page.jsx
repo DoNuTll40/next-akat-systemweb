@@ -3,7 +3,7 @@
 import GenericModal from "@/components/modals/GenericModal";
 import axios from "@/configs/axios.mjs";
 import { convertDateTime } from "@/services/convertDate";
-import { Empty, Table } from "antd";
+import { Empty, Popconfirm, Table } from "antd";
 import { CirclePlus, ListChecks } from "lucide-react";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
@@ -43,7 +43,7 @@ export default function Page() {
 
   // ฟังก์ชันสำหรับสร้างข้อมูลใหม่
   const handleCreate = async (formData) => {
-    let token = localStorage.getItem("token")
+    let token = localStorage.getItem("token");
 
     try {
       const rs = await axios.post(
@@ -67,7 +67,7 @@ export default function Page() {
 
   // ฟังก์ชันสำหรับแก้ไขข้อมูล
   const handleEdit = async (formData) => {
-    let token = localStorage.getItem("token")
+    let token = localStorage.getItem("token");
 
     try {
       const rs = await axios.put(
@@ -91,11 +91,11 @@ export default function Page() {
 
   // ฟังก์ชันสำหรับลบข้อมูล
   const handleDelete = async (record) => {
-    let token = localStorage.getItem("token")
+    let token = localStorage.getItem("token");
 
     try {
       const rs = await axios.delete(
-        `/setting/removeCheckInStatus/${record.index}`,
+        `/setting/removeCheckInStatus/${record.check_in_status_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -141,7 +141,7 @@ export default function Page() {
 
   const columns = [
     {
-      title: "ID",
+      title: "No.",
       dataIndex: "index",
       sorter: { compare: (a, b) => a.index - b.index },
       width: "5rem",
@@ -149,7 +149,10 @@ export default function Page() {
     {
       title: "ชื่อสถานะ",
       dataIndex: "check_in_status_name",
-      sorter: { compare: (a, b) => a.check_in_status_name.localeCompare(b.check_in_status_name) },
+      sorter: {
+        compare: (a, b) =>
+          a.check_in_status_name.localeCompare(b.check_in_status_name),
+      },
       width: "15rem",
     },
     {
@@ -190,12 +193,19 @@ export default function Page() {
           >
             แก้ไข
           </button>
-          <button
-            onClick={() => handleDelete(record)}
-            className="text-red-500 hover:cursor-pointer hover:underline"
+          <Popconfirm
+            title="คุณต้องการลบข้อมูล"
+            description="ยืนยันที่จะลบข้อมูลใช่หรือไม่"
+            placement="topLeft"
+            onConfirm={ () => handleDelete(record)}
+            onCancel={() => console.log("ยกเลิก")}
+            okText="ยืนยัน"
+            cancelText="ยกเลิก"
           >
-            ลบ
-          </button>
+            <button className="text-red-500 hover:cursor-pointer hover:underline">
+              ลบ
+            </button>
+          </Popconfirm>
         </div>
       ),
       width: "8rem",
@@ -216,7 +226,11 @@ export default function Page() {
         <Button
           className="bg-green-700 hover:bg-green-600 transition py-2 px-6 rounded-md mb-4 text-sm font-semibold text-white shadow-sm"
           onClick={openCreateModal}
-          label={<div className="flex gap-1.5 items-center"><CirclePlus size={16} strokeWidth={3} /> สร้างใหม่</div>}
+          label={
+            <div className="flex gap-1.5 items-center">
+              <CirclePlus size={16} strokeWidth={3} /> สร้างใหม่
+            </div>
+          }
         />
       </div>
 
@@ -224,12 +238,14 @@ export default function Page() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
-        fields={[
-          { name: "check_in_status_name", label: "ชื่อสถานะ" },
-        ]}
-        initialData={modalMode === "edit" && selectedRecord ? {
-          check_in_status_name: selectedRecord.check_in_status_name
-        } : {}}
+        fields={[{ name: "check_in_status_name", label: "ชื่อสถานะ" }]}
+        initialData={
+          modalMode === "edit" && selectedRecord
+            ? {
+                check_in_status_name: selectedRecord.check_in_status_name,
+              }
+            : {}
+        }
         title={modalMode === "create" ? "สร้างสถานะใหม่" : "แก้ไขสถานะ"}
       />
 

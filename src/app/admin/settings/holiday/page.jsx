@@ -6,6 +6,7 @@ import { Empty, Table } from "antd";
 import { ListChecks, RefreshCcw } from "lucide-react";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
+import moment from "moment/moment"
 
 export default function Page() {
   const [data, setData] = useState([]);
@@ -54,6 +55,13 @@ export default function Page() {
       title: "วัน",
       dataIndex: "holiday_name",
       sorter: (a, b) => a.holiday_name.localeCompare(b.holiday_name),
+      ellipsis: true,
+    },
+    {
+      title: "วันที่",
+      dataIndex: "holiday_date",
+      render: (date) => moment(date).add("years", 543).format("DD/MM/YYYY"),
+      sorter: (a, b) => a.holiday_date.localeCompare(b.holiday_date),
       ellipsis: true,
     },
     {

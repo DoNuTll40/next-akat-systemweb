@@ -110,7 +110,7 @@ input:focus {
   @apply py-1
 }
 
-.ant-tooltip-open, .ant-tag {
+.ant-tooltip-open, .ant-tag, .ant-popover-content, .ant-popconfirm-buttons button {
   @apply font-sarabun
 }
 

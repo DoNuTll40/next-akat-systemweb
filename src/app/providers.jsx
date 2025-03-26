@@ -6,6 +6,7 @@ import { SidebarContextProvider } from "@/contexts/SidebarContext";
 import NextTopLoader from "nextjs-toploader";
 import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/primereact.min.css";
+import '@ant-design/v5-patch-for-react-19';
 import { ToastContainer } from "react-toastify";
 
 export default function Providers({ children }) {

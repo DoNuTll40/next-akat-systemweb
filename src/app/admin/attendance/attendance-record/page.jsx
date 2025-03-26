@@ -35,6 +35,7 @@ export default function page() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [errMsg, setErrMsg] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchApi();
@@ -42,8 +43,8 @@ export default function page() {
 
   const fetchApi = async () => {
     let token = localStorage.getItem("token");
-
     try {
+      setData([])
       const rs = await axios.get("/publicAPI/fetchDataAllAttendanceRecord", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -55,6 +56,8 @@ export default function page() {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false)
     }
   };
   
@@ -300,8 +303,9 @@ export default function page() {
           />
         </div>
         <Button
-          className="px-4 py-2 text-sm font-semibold rounded-md bg-green-800 hover:bg-green-700 transition-all text-white shadow-sm"
+          className="px-4 py-2 text-sm font-semibold disabled:opacity-50 rounded-md bg-green-800 hover:bg-green-700 transition-all text-white shadow-sm"
           onClick={exportToExcel}
+          disabled={!dataSource}
           label={
             <p className="flex gap-1 items-center">
               <Sheet size={15} strokeWidth={2} /> บันทึก Excel <ExternalLink size={10} />
@@ -359,6 +363,7 @@ export default function page() {
         rowKey="index"
         rowHoverable={true}
         columns={columns}
+        loading={loading}
         scroll={{ x: 800 }}
         sortDirections={["ascend", "descend", "ascend"]}
         showSorterTooltip={{ title: "คลิกเพื่อเรียงลำดับ" }}
