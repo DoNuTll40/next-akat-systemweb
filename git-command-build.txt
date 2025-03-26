@@ -1,0 +1,9 @@
+git init
+
+git add .
+
+git commit -m "update code"
+
+git remote add origin https://github.com/DoNuTll40/next_akathos_systems.git
+
+git push -u origin main --force
