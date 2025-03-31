@@ -9,8 +9,8 @@ export const metadata = {
   icons: {
     icon: [
       {
-        url: 'http://akathospital.com/assets/images/moph-sm.png',
-        href: 'http://akathospital.com/assets/images/moph-sm.png'
+        url: '/images/moph-sm.png',
+        href: '/images/moph-sm.png'
       }
     ]
   },

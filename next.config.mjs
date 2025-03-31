@@ -5,6 +5,7 @@ const nextConfig = {
     assetPrefix: "/hospital",
     images: {
         unoptimized: true,
+        
     },
 };
 
