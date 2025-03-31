@@ -29,6 +29,7 @@
     "react-dom": "^19.0.0",
     "react-idle-timer": "^5.7.2",
     "react-toastify": "^11.0.5",
+    "signature_pad": "^5.0.7",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

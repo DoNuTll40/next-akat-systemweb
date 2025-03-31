@@ -32,7 +32,7 @@ export default function Layout({ children }) {
 
   return (
     <ProtectedAdminRoute>
-      <IdleTimerProvider timeout={10 * 60 * 1000} onIdle={hdlIdle}>
+      <IdleTimerProvider timeout={30 * 60 * 1000} onIdle={hdlIdle}>
         <div className="h-screen flex flex-col">
           <Header className="flex-shrink-0" />
           <div className="flex flex-grow overflow-hidden">
