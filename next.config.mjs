@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: "export",
+    output: "standalone",
     basePath: "/hospital",
     assetPrefix: "/hospital",
-    trailingSlash: true,
-    skipTrailingSlashRedirect: true,
-    reactStrictMode: true,
     images: {
         unoptimized: true,
     },

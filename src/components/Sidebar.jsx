@@ -51,10 +51,14 @@ export default function SideBar() {
       path: "/admin/settings",
       title: "การตั้งค่า",
       submenu: [
-        { name: "ข้อมูลชื่อสถานะเข้างาน", path: "/admin/settings/checkin" },
-        { name: "ข้อมูลชื่อสถานะออกงาน", path: "/admin/settings/checkout" },
-        { name: "บันทึกการเช้างาน", path: "/admin/settings/shift" },
-        { name: "ข้อมูลวันหยุด", path: "/admin/settings/holiday" },
+        { name: "ข้อมูลชื่อสถานะเข้างาน", path: "/admin/settings/checkin", group: "ระบบลงเวลา" },
+        { name: "ข้อมูลชื่อสถานะออกงาน", path: "/admin/settings/checkout", group: "ระบบลงเวลา" },
+        { name: "บันทึกการเช้างาน", path: "/admin/settings/shift", group: "ระบบลงเวลา" },
+        { name: "ข้อมูลวันหยุด", path: "/admin/settings/holiday", group: "ระบบลงเวลา" },
+        { name: "ข้อมูลเวอร์ชั่น API", path: "/admin/settings/api-version", group: "เวอร์ชั่น" },
+        { name: "ข้อมูลรายละเอียด API", path: "/admin/settings/api-details", group: "เวอร์ชั่น" },
+        { name: "ข้อมูลเวอร์ชั่นหน้าเว็บ", path: "/admin/settings/web-version", group: "เวอร์ชั่น" },
+        { name: "ข้อมูลรายละเอียดหน้าเว็บ", path: "/admin/settings/web-details", group: "เวอร์ชั่น" },
       ],
     },
   ];
@@ -153,7 +157,7 @@ export default function SideBar() {
           <div className="my-2 mb-0.5 flex flex-col gap-1.5 overflow-auto">
             {(role?.toLowerCase() === "admin" ? adminSideBar : userSideBar).map((item, index) => (
               <div key={index}>
-                {item.submenu ? (
+                {item.submenu && item.submenu.length > 0 ? (
                   <button
                     className={`flex w-full justify-between items-center gap-2 p-2 pl-3 rounded-l-full transition hover:cursor-pointer
                       ${isActive(item) && !onHover && isMini ? "bg-gray-300" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
@@ -162,9 +166,9 @@ export default function SideBar() {
                       handleSubmenuToggle(index);
                     }}
                   >
-                    <div className="flex animate-fadeIn gap-1.5">
+                    <div className="flex gap-1.5">
                       <span>{item.icon}</span>
-                      <span className={`animate-fadeIn ${isMini && !onHover && "hidden"}`}>{item.name}</span>
+                      <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
                     </div>
                     <ChevronDown
                       className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
@@ -175,44 +179,45 @@ export default function SideBar() {
                   </button>
                 ) : (
                   <Link
-                    href={item.submenu ? "" : item.path}
+                    href={item.path} // ลบการเช็ค submenu ออก เพราะถ้าไม่มี submenu ให้ไป path ตรงๆ
+                    prefetch={false}
                     className={`flex justify-between items-center gap-2 p-2 pl-3 rounded-l-full transition 
-                      ${isActive(item) ? "bg-gray-300" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
-                    onClick={(e) => {
-                      if (item.submenu) {
-                        e.preventDefault();
-                        handleSubmenuToggle(index);
-                      }
-                    }}
+                    ${isActive(item) ? "bg-gray-300" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
                   >
-                    <div className="flex animate-fadeIn gap-1.5" key={index}>
+                    <div className="flex gap-1.5" key={index}>
                       <span>{item.icon}</span>
-                      <span className={`animate-fadeIn ${isMini && !onHover && "hidden"}`}>{item.name}</span>
+                      <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
                     </div>
-                    {item.submenu && (
-                      <ChevronDown
-                        className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index && " -rotate-180"}`}
-                        size={16}
-                        strokeWidth={1}
-                      />
-                    )}
                     {item.status && user?.status !== item.status ? item.lock : item.unLock}
                   </Link>
                 )}
+
+                {/* render submenu */}
                 {item.submenu && submenuOpen === index && (!isMini || onHover) && (
-                  <div className="pl-4 not-dark:shadow-inner shadow-gray-200 rounded-tl-2xl">
-                    {item.submenu.map((submenuItem, subIndex) => (
-                      <Link
-                        key={subIndex}
-                        href={submenuItem.path}
-                        className={`flex items-center gap-2 p-2 my-0.5 pl-4 rounded-l-full transition
-                          ${pathname === submenuItem.path ? "bg-gray-300" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
-                      >
-                        <span className="flex items-center">- {submenuItem.name}</span>
-                      </Link>
+                  <div className="pl-4 shadow-inner shadow-gray-200 rounded-tl-2xl">
+                    {Object.entries(item.submenu.reduce((acc, sub) => {
+                      const group = sub.group || "null";
+                      (acc[group] = acc[group] || []).push(sub);
+                      return acc;
+                    }, {})).map(([group, subs], gi) => (
+                      <div key={gi} className="my-0.5">
+                        {group !== "null" && <div className={`${gi === 0 && "pt-3" } text-sm font-semibold select-none text-gray-500 mt-1`}>{group}</div>}
+                        {subs.map((sub, si) => (
+                          <Link
+                            key={si}
+                            href={sub.path}
+                            prefetch={false}
+                            className={`flex p-2 pl-4 my-0.5 rounded-l-full transition ${pathname === sub.path ? "bg-gray-300" : "hover:bg-gray-200"}`}
+                          >
+                            - {sub.name}
+                          </Link>
+                        ))}
+                      </div>
                     ))}
                   </div>
                 )}
+                {/* สิ้นสุดของการแสดง menu */}
+
               </div>
             ))}
           </div>

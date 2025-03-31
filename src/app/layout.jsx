@@ -22,9 +22,9 @@ export default function RootLayout({ children }) {
       <body>
         <Providers>
         {children}
+        <GoogleAnalytics gaId="G-8M5F497W0J" />
         </Providers>
       </body>
-      <GoogleAnalytics gaId="G-8M5F497W0J" />
     </html>
   );
 }

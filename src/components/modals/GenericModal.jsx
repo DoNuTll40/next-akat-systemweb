@@ -106,17 +106,40 @@ export default function GenericModal({
               className="w-full max-w-md bg-white p-4 rounded-xl mx-4"
             >
               <div className="py-4">
-                {fields.map((field, index) => (
-                  <div key={field.name} className="mb-4 mx-1">
+              {fields.map((field, index) => (
+                <div key={field.name} className="mb-4 mx-1">
+                  <label className="block text-sm font-medium mb-1">{field.label}</label>
+                  
+                  {field.type === "select" ? (
+                    <select
+                      value={formData[field.name] || ""}
+                      onChange={(e) => handleChange(field.name, e.target.value)}
+                      className="w-full text-[0.95rem] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {field.options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : field.type === "textarea" ? (
+                    <textarea
+                      value={formData[field.name] || ""}
+                      onChange={(e) => handleChange(field.name, e.target.value)}
+                      className="w-full text-[0.95rem] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                    />
+                  ) : (
                     <input
-                      key={`input-${index + 1}`}
+                      type={field.type || "text"}
                       placeholder={field.label}
                       value={formData[field.name] || ""}
                       onChange={(e) => handleChange(field.name, e.target.value)}
                       className="w-full text-[0.95rem] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                  </div>
-                ))}
+                  )}
+                </div>
+              ))}
               </div>
             </Dialog>
           </motion.div>
