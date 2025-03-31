@@ -9,7 +9,7 @@ export default function layout({children}) {
       <div className="w-96 bg-gray-50/85 border border-white backdrop-blur-xl text-black shadow-xl hover:border-black/20 h-fit rounded-2xl p-4 transition-all transform ease-in-out duration-300">
           <div className="select-none">
             <div className="flex gap-2 justify-center items-center my-2">
-              <img className="max-w-[80px] pointer-events-none" src="/images/moph-sm.png" alt="logo" />
+              <img className="max-w-[80px] pointer-events-none" src="/hospital/images/moph-sm.png" alt="logo" />
             </div>
             {children}
             <p className="text-center text-xs border-t border-gray-300 pt-2">&copy; Copyright 2025 โรงพยาบาลอากาศอำนวย</p>

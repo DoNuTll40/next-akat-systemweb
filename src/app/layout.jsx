@@ -9,8 +9,8 @@ export const metadata = {
   icons: {
     icon: [
       {
-        url: '/images/moph-sm.png',
-        href: '/images/moph-sm.png'
+        url: '/hospital/images/moph-sm.png',
+        href: '/hospital/images/moph-sm.png'
       }
     ]
   },
