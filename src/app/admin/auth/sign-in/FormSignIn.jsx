@@ -30,7 +30,11 @@ export default function FormSignIn() {
     canvas.height = canvas.offsetHeight * ratio;
     ctx.scale(ratio, ratio); // ป้องกันภาพแตก
   
-    const signature = new SignaturePad(canvas);
+    const signature = new SignaturePad(canvas, {
+      minWidth: 1,  // ขนาดเส้นขั้นต่ำ
+      maxWidth: 3,  // ขนาดเส้นสูงสุด
+      penColor: "black",  // สีของปากกา
+    });
     setSignaturePad(signature);
   }, []);
 
@@ -42,9 +46,26 @@ export default function FormSignIn() {
 
   const saveSignature = () => {
     if (signaturePad) {
-      const dataUrl = signaturePad.toDataURL("image/svg+xml");
-      console.log(dataUrl);
+        const dataUrl = signaturePad.toDataURL("image/svg+xml");
+
+        // แปลง SVG เป็น PNG
+        const img = new Image();
+        img.src = dataUrl;
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width * 3;  // เพื่อเพิ่มความละเอียด
+            canvas.height = img.height * 3;
+
+            ctx.imageSmoothingEnabled = true;  // เปิดการทำให้ภาพคมชัด
+
+            ctx.scale(3, 3);  // ปรับความละเอียด
+            ctx.drawImage(img, 0, 0);
+            const pngBase64 = canvas.toDataURL('image/png');
+            console.log(pngBase64)
+        };
     }
+
   };
 
   const hdlSubmit = async (e) => {
@@ -112,7 +133,7 @@ export default function FormSignIn() {
             </div>
             <canvas
               ref={canvasRef}
-              className="w-full h-48 border rounded-md border-gray-500 bg-white"
+              className="w-full h-42 border rounded-md border-gray-500 bg-white hover:cursor-crosshair"
             />
             <div className="flex gap-2 mt-2">
               <Button className="px-4 py-1.5 border border-gray-500 rounded-full " type="button" onClick={clearSignature} label="ล้างลายเซ็น" />
