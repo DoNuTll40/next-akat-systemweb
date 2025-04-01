@@ -2,7 +2,7 @@
 
 import axios from "@/configs/axios.mjs";
 import { cryptoEncode } from "@/configs/crypto.mjs";
-import { IdCard, Info, LogIn } from "lucide-react";
+import { IdCard, Info, LogIn, Signature } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
@@ -22,9 +22,14 @@ export default function FormSignIn() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.width = canvas.offsetWidth; // ตั้งค่าขนาดแคนวาสให้ตรงกับขนาดขององค์ประกอบ HTML
-    canvas.height = canvas.offsetHeight;
-
+    const ctx = canvas.getContext("2d");
+    const ratio = window.devicePixelRatio || 1; // ใช้ DPI จริงของอุปกรณ์
+  
+    // ตั้งค่าขนาด canvas ตาม DPI ของจอ
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    ctx.scale(ratio, ratio); // ป้องกันภาพแตก
+  
     const signature = new SignaturePad(canvas);
     setSignaturePad(signature);
   }, []);
@@ -37,8 +42,7 @@ export default function FormSignIn() {
 
   const saveSignature = () => {
     if (signaturePad) {
-      const dataUrl = signaturePad.toDataURL("image/png");
-      const resize = signaturePad.fromDataURL(dataUrl, { ratio: 2, width: 1050, height: 501 })
+      const dataUrl = signaturePad.toDataURL("image/svg+xml");
       console.log(dataUrl);
     }
   };
@@ -102,10 +106,13 @@ export default function FormSignIn() {
             required
           />
           <div className="flex flex-col items-center mt-2 gap-1">
-            <p>กรุณาวาดลายเซ็น</p>
+            <div className="flex gap-1 items-center w-full">
+              <Signature size={18} strokeWidth={1.5} />
+              <p>กรุณาวาดลายเซ็น</p>
+            </div>
             <canvas
               ref={canvasRef}
-              className="w-full max-h-44 border rounded-md border-gray-500 bg-white"
+              className="w-full h-48 border rounded-md border-gray-500 bg-white"
             />
             <div className="flex gap-2 mt-2">
               <Button className="px-4 py-1.5 border border-gray-500 rounded-full " type="button" onClick={clearSignature} label="ล้างลายเซ็น" />
