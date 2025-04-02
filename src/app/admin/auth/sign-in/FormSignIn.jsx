@@ -31,8 +31,8 @@ export default function FormSignIn() {
     ctx.scale(ratio, ratio); // ป้องกันภาพแตก
   
     const signature = new SignaturePad(canvas, {
-      minWidth: 1,  // ขนาดเส้นขั้นต่ำ
-      maxWidth: 3,  // ขนาดเส้นสูงสุด
+      minWidth: 0.5,  // ขนาดเส้นขั้นต่ำ
+      maxWidth: 1.5,  // ขนาดเส้นสูงสุด
       penColor: "black",  // สีของปากกา
     });
     setSignaturePad(signature);
