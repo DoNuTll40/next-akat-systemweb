@@ -16,7 +16,7 @@ export default function ProtectedAdminRoute({ children }) {
 
     // ถ้าการโหลดเสร็จแล้ว และไม่มี user หรือ user ไม่มี position
     if (!loading) {
-      if (!user || !user.position) {
+      if (!user || !user.positions) {
         // redirect ไปหน้า login เมื่อ user ไม่ได้ login
         router.replace("/admin/auth/login");
       }
