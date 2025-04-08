@@ -1,6 +1,8 @@
 
 export default function page() {
   return (
-    <div>page</div>
+    <div className="min-h-dvh bg-white rounded-lg p-4">
+      <p>ยินดีต้อนรับ</p>
+    </div>
   )
 }

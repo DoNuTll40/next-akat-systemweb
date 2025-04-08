@@ -2,7 +2,6 @@ export const metadata = {
   title: "สร้างผู้ใช้งาน | โรงพยาบาลอากาศอำนวย"
 }
 
-import React from 'react'
 import FormSignIn from './FormSignIn'
 
 export default function page() {

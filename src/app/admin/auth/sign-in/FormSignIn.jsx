@@ -2,13 +2,12 @@
 
 import axios from "@/configs/axios.mjs";
 import { cryptoEncode } from "@/configs/crypto.mjs";
-import { IdCard, Info, LogIn, Signature } from "lucide-react";
+import { IdCard, Info, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
-import SignaturePad from "signature_pad";
 
 export default function FormSignIn() {
   const [loadingButton, setLoadingButton] = useState(false);
@@ -16,67 +15,15 @@ export default function FormSignIn() {
     national_id: "",
   });
   const [errMsg, setErrMsg] = useState("");
-  const canvasRef = useRef(null);
-  const [signaturePad, setSignaturePad] = useState(null);
-  const [image, setImage] = useState(null)
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const canvas = canvasRef.current;
-  //   const ctx = canvas.getContext("2d");
-  //   const ratio = window.devicePixelRatio || 1; // ใช้ DPI จริงของอุปกรณ์
-  
-  //   // ตั้งค่าขนาด canvas ตาม DPI ของจอ
-  //   canvas.width = canvas.offsetWidth * ratio;
-  //   canvas.height = canvas.offsetHeight * ratio;
-  //   ctx.scale(ratio, ratio); // ป้องกันภาพแตก
-  
-  //   const signature = new SignaturePad(canvas, {
-  //     minWidth: 0.5,  // ขนาดเส้นขั้นต่ำ
-  //     maxWidth: 1.5,  // ขนาดเส้นสูงสุด
-  //     penColor: "black",  // สีของปากกา
-  //   });
-  //   setSignaturePad(signature);
-  // }, []);
-
-  // const clearSignature = () => {
-  //   if (signaturePad) {
-  //     signaturePad.clear();
-  //   }
-  // };
-
-  // const saveSignature = () => {
-  //   if (signaturePad) {
-  //       const dataUrl = signaturePad.toDataURL("image/svg+xml");
-
-  //       // แปลง SVG เป็น PNG
-  //       const img = new Image();
-  //       img.src = dataUrl;
-  //       img.onload = function() {
-  //           const canvas = document.createElement('canvas');
-  //           const ctx = canvas.getContext('2d');
-  //           canvas.width = img.width * 3;  // เพื่อเพิ่มความละเอียด
-  //           canvas.height = img.height * 3;
-
-  //           ctx.imageSmoothingEnabled = true;  // เปิดการทำให้ภาพคมชัด
-
-  //           ctx.scale(3, 3);  // ปรับความละเอียด
-  //           ctx.drawImage(img, 0, 0);
-  //           const pngBase64 = canvas.toDataURL('image/png');
-  //           setImage(pngBase64)
-  //       };
-  //   }
-
-  // };
-
   const hdlSubmit = async (e) => {
-    // saveSignature();
     e.preventDefault();
     setLoadingButton(true);
     setErrMsg("");
     const hash = await cryptoEncode(input.national_id);
 
-    const output = { national_id: hash, signature_user_token: image };
+    const output = { national_id: hash };
 
     try {
       const rs = await axios.post("/auth/authRegister", output);
@@ -128,20 +75,6 @@ export default function FormSignIn() {
             autoComplete=""
             required
           />
-          {/* <div className="flex flex-col items-center mt-2 gap-1">
-            <div className="flex gap-1 items-center w-full">
-              <Signature size={18} strokeWidth={1.5} />
-              <p>กรุณาวาดลายเซ็น</p>
-            </div>
-            <canvas
-              ref={canvasRef}
-              className="w-full h-42 border rounded-md border-gray-500 bg-white hover:cursor-crosshair"
-            />
-            <div className="flex gap-2 mt-2">
-              <Button className="px-4 py-1.5 border border-gray-500 rounded-full " type="button" onClick={clearSignature} label="ล้างลายเซ็น" />
-              <Button className="px-4 py-1.5 border border-gray-500 rounded-full " type="button" onClick={saveSignature} label="บันทึกลายเซ็น" />
-            </div>
-          </div> */}
         </div>
         <div className="mt-8 mb-2">
           <Button

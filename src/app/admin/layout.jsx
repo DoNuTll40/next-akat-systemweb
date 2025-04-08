@@ -8,9 +8,11 @@ import ProtectedAdminRoute from "../protectedAdminRoute";
 import { IdleTimerProvider } from "react-idle-timer";
 import AuthHook from "@/hooks/AuthHook.mjs";
 import { toast } from "react-toastify";
+import SignaturePadModal from "@/components/modals/SignaturePadModal";
+import { useEffect, useState } from "react";
 
 export default function Layout({ children }) {
-  const { logout, errMsg, setErrMsg } = AuthHook();
+  const { logout, setErrMsg, user } = AuthHook();
   const pathName = usePathname();
 
   if (pathName.startsWith("/admin/auth")) {
@@ -19,7 +21,9 @@ export default function Layout({ children }) {
 
   const hdlIdle = () => {
     logout();
-    setErrMsg("ระบบได้ทำการ ออกจากระบบให้ เนื่องจากไม่มีการใช้งานระบบ เป็นระยะเวลาตามที่กำหนด...")
+    setErrMsg(
+      "ระบบได้ทำการ ออกจากระบบให้ เนื่องจากไม่มีการใช้งานระบบ เป็นระยะเวลาตามที่กำหนด..."
+    );
     toast(
       "ระบบได้ทำการ ออกจากระบบให้ เนื่องจากไม่มีการใช้งานระบบ เป็นระยะเวลาตามที่กำหนด...",
       {
@@ -33,6 +37,7 @@ export default function Layout({ children }) {
   return (
     <ProtectedAdminRoute>
       <IdleTimerProvider timeout={30 * 60 * 1000} onIdle={hdlIdle}>
+        { !user?.signature_status && <SignaturePadModal /> }
         <div className="h-screen flex flex-col">
           <Header className="flex-shrink-0" />
           <div className="flex flex-grow overflow-hidden">
