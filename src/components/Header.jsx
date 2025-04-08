@@ -3,9 +3,7 @@
 import AuthHook from "@/hooks/AuthHook.mjs";
 import SideHook from "@/hooks/SideHook.mjs";
 import { Avatar, Dropdown } from "antd";
-import { AnimatePresence, motion } from "framer-motion";
 import { AlignJustify, AlignLeft, IdCard, LogOut } from "lucide-react";
-import { useEffect } from "react";
 
 export default function Header() {
   const { logout, user } = AuthHook();
@@ -47,7 +45,7 @@ export default function Header() {
                       <AlignJustify size={20} />
                   )}
               </button>
-                <p>{ user.status === "ADMIN" ? "ผู้ดูแลระบบ" : "ผู้ใช้งาน"}</p>
+                <p>{ user?.status === "ADMIN" ? "ผู้ดูแลระบบ" : "ผู้ใช้งาน"}</p>
             </div>
             <div>
             <Dropdown

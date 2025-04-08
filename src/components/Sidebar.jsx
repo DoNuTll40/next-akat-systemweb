@@ -1,5 +1,6 @@
 "use client";
 
+import AuthHook from "@/hooks/AuthHook.mjs";
 import SideHook from "@/hooks/SideHook.mjs";
 import { BookText, CalendarClock, ChevronDown, ChevronRight, CircleUser, House, LayoutDashboard, Lock, LockOpen, Minus, Settings, ShieldUser } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 
 export default function SideBar() {
+  const { user } = AuthHook();
   const { isOpen, isMini, toggleMini } = SideHook();
   const [onHover, setOnHover] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(null); // ใช้เพื่อตรวจสอบเมนูย่อยที่เปิดอยู่
@@ -91,8 +93,6 @@ export default function SideBar() {
       unLock: <LockOpen size={15} strokeWidth={1} />,
     },
   ];
-
-  const user = { status: "ADMIN" };
 
   // ดึง role จาก pathname
   useEffect(() => {
