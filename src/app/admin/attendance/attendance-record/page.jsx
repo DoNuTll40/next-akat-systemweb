@@ -117,7 +117,7 @@ export default function page() {
       dataIndex: "users",
       sorter: (a, b) => a.users.fullname_thai.localeCompare(b.users.fullname_thai),
       ellipsis: true,
-      render: (users) => (users ? `${users.prefix} ${users.fullname_thai}` : "-"),
+      render: (users) => (users ? `${users.prefixes?.prefix_name} ${users.fullname_thai}` : "-"),
     },
     {
       title: "เข้างาน",
@@ -219,7 +219,7 @@ export default function page() {
     // แปลงข้อมูลเป็น array ที่เหมาะสมกับ Excel
     const formattedData = dataSource.map((item) => ({
       "รหัสการบันทึก": item.index,
-      "ชื่อผู้ใช้": `${item.users.prefix} ${item.users.fullname_thai}`,
+      "ชื่อผู้ใช้": `${item.users.prefixes?.prefix_name} ${item.users.fullname_thai}`,
       "ประเภทการทำงาน": item.shift_types.shift_type_name,
       "เวลาเริ่มต้น": item.starting,
       "สถานะการเข้างาน": item.check_in_status.check_in_status_name,

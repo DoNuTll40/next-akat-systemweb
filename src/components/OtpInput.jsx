@@ -137,9 +137,9 @@ export default function OtpInput() {
               ) : (
                 <p className="flex justify-center items-center gap-1">
                   OTP จะหมดอายุใน{" "}
-                  <pre className="px-2 bg-gray-300 rounded-sm font-sans font-semibold">
+                  <span className="px-2 bg-gray-300 rounded-sm font-sans font-semibold">
                     {formatTime(timeLeft)}
-                  </pre>{" "}
+                  </span>{" "}
                   นาที
                 </p>
               )}

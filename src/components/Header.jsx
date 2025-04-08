@@ -1,11 +1,13 @@
 "use client"
 
+import AppHook from "@/hooks/AppHook.mjs";
 import AuthHook from "@/hooks/AuthHook.mjs";
 import SideHook from "@/hooks/SideHook.mjs";
 import { Avatar, Dropdown } from "antd";
 import { AlignJustify, AlignLeft, IdCard, LogOut } from "lucide-react";
 
 export default function Header() {
+  const { setShowModalProfile } = AppHook();
   const { logout, user } = AuthHook();
   const { isOpen, toggleSidebar } = SideHook();
 
@@ -25,7 +27,7 @@ export default function Header() {
 
   const hdlMenuClick = (key) => {
     if (key === '1') {
-      alert('ไปหน้าโปรไฟล์');
+      setShowModalProfile(true);
     } else if (key === '2') {
       logout()
     }

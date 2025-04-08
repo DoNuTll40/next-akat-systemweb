@@ -10,8 +10,11 @@ import AuthHook from "@/hooks/AuthHook.mjs";
 import { toast } from "react-toastify";
 import SignaturePadModal from "@/components/modals/SignaturePadModal";
 import { useEffect, useState } from "react";
+import ProfileModal from "@/components/modals/ProfileModal";
+import AppHook from "@/hooks/AppHook.mjs";
 
 export default function Layout({ children }) {
+  const { showModalProfile } = AppHook();
   const { logout, setErrMsg, user } = AuthHook();
   const pathName = usePathname();
 
@@ -38,6 +41,7 @@ export default function Layout({ children }) {
     <ProtectedAdminRoute>
       <IdleTimerProvider timeout={30 * 60 * 1000} onIdle={hdlIdle}>
         { !user?.signature_status && <SignaturePadModal /> }
+        { showModalProfile && <ProfileModal /> }
         <div className="h-screen flex flex-col">
           <Header className="flex-shrink-0" />
           <div className="flex flex-grow overflow-hidden">
