@@ -60,7 +60,6 @@ export default function Header() {
       // ปล่อย URL เมื่อ component ถูก unmount
       return () => window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.log(err)
       setProfileImage(null)
     }
   }

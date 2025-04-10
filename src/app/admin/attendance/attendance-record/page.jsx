@@ -82,6 +82,8 @@ export default function page() {
   const dataSource = data.map((item, index) => ({
     ...item,
     index: index + 1,
+    startingSignatureUrl: item.starting_signature_id && `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.starting_signature_id}`,
+    endingSignatureUrl: item.ending_signature_id && `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.ending_signature_id}`,
   }));
   
   // ทำตัวเลือกใน filter จากข้อมูล
@@ -142,9 +144,9 @@ export default function page() {
     },
     {
       title: "ลงชื่อเข้า",
-      dataIndex: "starting_signature_id",
-      render: (starting_signature_id) => (
-        <img className="pointer-events-none" src={`https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${starting_signature_id}`} alt="" />
+      dataIndex: "startingSignatureUrl",
+      render: (startingSignatureUrl) => (
+        startingSignatureUrl ? <img className="pointer-events-none" src={startingSignatureUrl} alt="signatureIn" /> : "ไม่มีข้อมูล"
       ),
       width: "7rem"
     },
@@ -189,9 +191,9 @@ export default function page() {
     },
     {
       title: "ลงชื่อออก",
-      dataIndex: "ending_signature_id",
-      render: (ending_signature_id) => (
-        <img className="pointer-events-none" src={`https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${ending_signature_id}`} alt="" />
+      dataIndex: "endingSignatureUrl",
+      render: (endingSignatureUrl) => (
+        endingSignatureUrl ? <img className="pointer-events-none" src={endingSignatureUrl} alt="signatureOut" /> : "ไม่มีข้อมูล"
       ),
       width: "7rem"
     },
@@ -238,115 +240,95 @@ export default function page() {
   
   const exportToExcel = async () => {
     setStatusExport(true);
+  
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("ข้อมูลการเข้าออกงาน");
   
+    // กำหนดส่วนหัว
     worksheet.columns = [
-      { header: "รหัสการบันทึก", key: "index", width: 15 },
-      { header: "ชื่อผู้ใช้", key: "user", width: 25 },
-      { header: "ประเภทการทำงาน", key: "shift_type", width: 20 },
-      { header: "เวลาเริ่มต้น", key: "starting", width: 15 },
-      { header: "สถานะการเข้างาน", key: "check_in_status", width: 20 },
-      { header: "ลงชื่อเข้า", key: "starting_signature", width: 20 },
+      { header: "รหัส", key: "index", width: 15 },
+      { header: "ชื่อ", key: "user", width: 25 },
+      { header: "กะ", key: "shift_type", width: 20 },
+      { header: "เวลาเข้า", key: "starting", width: 15 },
+      { header: "สถานะเข้า", key: "check_in_status", width: 20 },
+      { header: "ลายเซ็นเข้า", key: "starting_signature", width: 20 },
       { header: "เวลาออก", key: "ending", width: 15 },
-      { header: "สถานะการออกงาน", key: "check_out_status", width: 20 },
-      { header: "ลงชื่อออก", key: "ending_signature", width: 20 },
+      { header: "สถานะออก", key: "check_out_status", width: 20 },
+      { header: "ลายเซ็นออก", key: "ending_signature", width: 20 },
     ];
   
+    // ทำให้ส่วนหัวสวย
     worksheet.getRow(1).font = { bold: true };
     worksheet.getRow(1).alignment = { horizontal: "center" };
-    worksheet.getRow(1).fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "D3D3D3" },
-    };
+    worksheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "D3D3D3" } };
   
-    for (let i = 0; i < dataSource.length; i++) {
-      const item = dataSource[i];
-    
-      if (i === 0) {
-        console.log("📌 แถวแรก:", item);
-        console.log("📌 starting_signature_id:", item.starting_signature_id);
-        console.log("📌 URL:", `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.starting_signature_id}`);
-      }
-    
-      const startingSignatureUrl = `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.starting_signature_id}`;
-      const endingSignatureUrl = `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.ending_signature_id}`;
-    
+    // วนลูปข้อมูล
+    for (const item of dataSource) {
       let startingImageId = null;
       let endingImageId = null;
   
-      // ดึงรูปภาพลายเซ็นเข้า
-      if (item.starting_signature_id) {
+      // ดึงลายเซ็นเข้า
+      if (item.startingSignatureUrl) {
         try {
-          const response = await fetch(startingSignatureUrl);
-          console.log(`Starting Signature Response Status: ${response.status}`);
-          if (!response.ok) {
-            throw new Error(`ไม่สามารถดึงรูปภาพลายเซ็นเข้าได้: ${response.statusText}`);
-          }
+          const response = await fetch(item.startingSignatureUrl);
+
+          if (!response.ok) throw new Error("ดึงลายเซ็นเข้าไม่ได้");
           const blob = await response.blob();
-          console.log(`Starting Signature Blob Type: ${blob.type}`); // ตรวจสอบประเภทไฟล์
-          const arrayBuffer = await blob.arrayBuffer();
-          const base64Image = Buffer.from(arrayBuffer).toString("base64");
-  
-          // กำหนด extension ตามประเภทไฟล์
-          const extension = blob.type.includes("png") ? "png" : "jpeg";
+
+          if (!blob.type.startsWith("image/")) throw new Error("ไม่ใช่รูปภาพ");
+          const base64Image = Buffer.from(await blob.arrayBuffer()).toString("base64");
           startingImageId = workbook.addImage({
-            base64: `data:image/${extension};base64,${base64Image}`,
-            extension: extension,
+            base64: `data:image/${blob.type.includes("png") ? "png" : "jpeg"};base64,${base64Image}`,
+            extension: blob.type.includes("png") ? "png" : "jpeg",
           });
+
         } catch (error) {
-          console.error("Error fetching starting signature:", error.message);
+          console.error(`ปัญหาลายเซ็นเข้า (${item.index}):`, error.message);
         }
       }
   
-      // Debug: ตรวจสอบ ending_signature_id
-      console.log(`Ending Signature ID: ${item.ending_signature_id}`);
-      console.log(`Ending Signature URL: ${endingSignatureUrl}`);
-  
-      // ดึงรูปภาพลายเซ็นออก
-      if (item.ending_signature_id) {
+      // ดึงลายเซ็นออก
+      if (item.endingSignatureUrl) {
         try {
-          const response = await fetch(endingSignatureUrl);
-          console.log(`Ending Signature Response Status: ${response.status}`);
-          if (!response.ok) {
-            throw new Error(`ไม่สามารถดึงรูปภาพลายเซ็นออกได้: ${response.statusText}`);
-          }
+          const response = await fetch(item.endingSignatureUrl);
+
+          if (!response.ok) throw new Error("ดึงลายเซ็นออกไม่ได้");
           const blob = await response.blob();
-          console.log(`Ending Signature Blob Type: ${blob.type}`);
-          const arrayBuffer = await blob.arrayBuffer();
-          const base64Image = Buffer.from(arrayBuffer).toString("base64");
-  
-          const extension = blob.type.includes("png") ? "png" : "jpeg";
+
+          if (!blob.type.startsWith("image/")) throw new Error("ไม่ใช่รูปภาพ");
+          const base64Image = Buffer.from(await blob.arrayBuffer()).toString("base64");
           endingImageId = workbook.addImage({
-            base64: `data:image/${extension};base64,${base64Image}`,
-            extension: extension,
+            base64: `data:image/${blob.type.includes("png") ? "png" : "jpeg"};base64,${base64Image}`,
+            extension: blob.type.includes("png") ? "png" : "jpeg",
           });
+
         } catch (error) {
-          console.error("Error fetching ending signature:", error.message);
+          console.error(`ปัญหาลายเซ็นออก (${item.index}):`, error.message);
         }
       }
   
+      // เพิ่มแถวข้อมูล
       const row = worksheet.addRow({
         index: item.index,
         user: `${item.users.prefixes?.prefix_name} ${item.users.fullname_thai}`,
         shift_type: item.shift_types.shift_type_name,
         starting: item.starting,
         check_in_status: item.check_in_status.check_in_status_name,
-        starting_signature: startingImageId ? "" : "ไม่มีลายเซ็น",
+        starting_signature: startingImageId !== null ? "" : "ไม่มีลายเซ็น",
         ending: item.ending || "ไม่มีข้อมูล",
         check_out_status: item.check_out_status?.check_out_status_name || "ไม่มีข้อมูล",
-        ending_signature: endingImageId ? "" : "ไม่มีลายเซ็น",
+        ending_signature: endingImageId !== null ? "" : "ไม่มีลายเซ็น",
       });
   
-      if (startingImageId) {
+      // เพิ่มรูปภาพ
+      if (startingImageId !== null) {
         worksheet.addImage(startingImageId, {
           tl: { col: 5, row: row.number - 1 },
           ext: { width: 100, height: 50 },
         });
       }
-  
-      if (endingImageId) {
+      
+      if (endingImageId !== null) {
         worksheet.addImage(endingImageId, {
           tl: { col: 8, row: row.number - 1 },
           ext: { width: 100, height: 50 },
@@ -357,25 +339,13 @@ export default function page() {
       row.alignment = { vertical: "middle", horizontal: "center" };
     }
   
-    worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber > 1) {
-        row.fill = {
-          type: "pattern",
-          pattern: "solid",
-          fgColor: { argb: rowNumber % 2 === 0 ? "F5F5F5" : "FFFFFF" },
-        };
-      }
-    });
-  
+    // ดาวน์โหลดไฟล์
     const buffer = await workbook.xlsx.writeBuffer();
-    const dataBlob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
+    const dataBlob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const date = new Date().toLocaleDateString("th-TH").replace(/\//g, "-");
     saveAs(dataBlob, `ข้อมูลการเข้าออกงาน_${date}.xlsx`);
     setStatusExport(false);
   };
-  // สิ้นสุดของฟังชั่น
 
   const hdlChengeStartDate = (date) => {
     const [month, day, year] = date.split('/');
