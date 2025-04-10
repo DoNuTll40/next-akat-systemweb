@@ -4,12 +4,15 @@ import AppHook from "@/hooks/AppHook.mjs";
 import AuthHook from "@/hooks/AuthHook.mjs";
 import SideHook from "@/hooks/SideHook.mjs";
 import { Avatar, Dropdown } from "antd";
+import axios from "axios";
 import { AlignJustify, AlignLeft, IdCard, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const { setShowModalProfile } = AppHook();
   const { logout, user } = AuthHook();
   const { isOpen, toggleSidebar } = SideHook();
+  const [profileImage, setProfileImage] = useState(null)
 
   const items = [
     {
@@ -32,6 +35,35 @@ export default function Header() {
       logout()
     }
   };
+
+  useEffect(() => {
+    fetchProfile();
+  }, [])
+
+  const fetchProfile = async () => {
+    try {
+      let token = localStorage.getItem("token")
+
+      const rs = await axios.get("/auth/fetchImage", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        responseType: "blob"
+      })
+
+      if(rs.status === 200){
+        const blob = rs.data;
+        const url = window.URL.createObjectURL(blob);
+        setProfileImage(url); // เก็บ URL ใน state
+      }
+
+      // ปล่อย URL เมื่อ component ถูก unmount
+      return () => window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.log(err)
+      setProfileImage(null)
+    }
+  }
 
   return (
     <div className="border-b border-gray-300 py-2 bg-white select-none">
@@ -58,7 +90,7 @@ export default function Header() {
               getPopupContainer={(trigger) => trigger.parentElement || document.body}
               className="font-sans"
             >
-              <Avatar className="hover:cursor-pointer shadow hover:opacity-80" src="https://provider.id.th/assets/user-dbff659c.png" onClick={(e) => e.preventDefault()} size={40} />
+              <Avatar className="hover:cursor-pointer shadow hover:opacity-80 animate-fadeIn" src={profileImage ? profileImage : `/hospital/images/profile.jpg`} onClick={(e) => e.preventDefault()} size={40} />
             </Dropdown>
             </div>
         </div>

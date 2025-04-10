@@ -61,6 +61,7 @@ export default function SideBar() {
         { name: "ข้อมูลรายละเอียด API", path: "/admin/settings/api-details", group: "เวอร์ชั่น" },
         { name: "ข้อมูลเวอร์ชั่นหน้าเว็บ", path: "/admin/settings/web-version", group: "เวอร์ชั่น" },
         { name: "ข้อมูลรายละเอียดหน้าเว็บ", path: "/admin/settings/web-details", group: "เวอร์ชั่น" },
+        { name: "Carousel", path: "/admin/settings/carousel", group: "หน้าเว็บ" },
       ],
     },
   ];
@@ -72,17 +73,17 @@ export default function SideBar() {
       path: "/user",
       title: "หน้าแรก",
     },
-    {
-      icon: <BookText size={22} strokeWidth={1} />,
-      name: "ฟอร์ม",
-      path: "/user/form",
-      title: "ฟอร์ม",
-      submenu: [
-        { name: "ฟอร์ม IDP", path: "/user/form/ipd" },
-        { name: "ฟอร์ม OPD", path: "/user/form/opd" },
-        { name: "ฟอร์ม ER", path: "/user/form/er" },
-      ],
-    },
+    // {
+    //   icon: <BookText size={22} strokeWidth={1} />,
+    //   name: "ฟอร์ม",
+    //   path: "/user/form",
+    //   title: "ฟอร์ม",
+    //   submenu: [
+    //     { name: "ฟอร์ม IDP", path: "/user/form/ipd" },
+    //     { name: "ฟอร์ม OPD", path: "/user/form/opd" },
+    //     { name: "ฟอร์ม ER", path: "/user/form/er" },
+    //   ],
+    // },
     {
       icon: <ShieldUser size={22} strokeWidth={1} />,
       name: "ผู้ดูแลระบบ",

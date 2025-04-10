@@ -11,7 +11,7 @@ import { ChartNoAxesGantt, ExternalLink, RefreshCcw, Search, Sheet } from "lucid
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
 dayjs.extend(buddhistEra);
@@ -34,8 +34,10 @@ export default function page() {
   const { RangePicker } = DatePicker;
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [errMsg, setErrMsg] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [errMsg, setErrMsg] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
+  const [statusExport, setStatusExport] = useState(false);
 
   useEffect(() => {
     fetchApi();
@@ -43,6 +45,7 @@ export default function page() {
 
   const fetchApi = async () => {
     let token = localStorage.getItem("token");
+    setToken(token)
     try {
       setData([])
       const rs = await axios.get("/publicAPI/fetchDataAllAttendanceRecord", {
@@ -138,6 +141,14 @@ export default function page() {
       width: "7rem"
     },
     {
+      title: "ลงชื่อเข้า",
+      dataIndex: "starting_signature_id",
+      render: (starting_signature_id) => (
+        <img className="pointer-events-none" src={`https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${starting_signature_id}`} alt="" />
+      ),
+      width: "7rem"
+    },
+    {
       title: "ออกงาน",
       dataIndex: "check_out_status",
       sorter: (a, b) => {
@@ -174,6 +185,15 @@ export default function page() {
       ellipsis: true,
       filters: uniqueCheckShiftType,
       onFilter: (value, record) => record.shift_types?.shift_type_name === value,
+      width: "8rem"
+    },
+    {
+      title: "ลงชื่อออก",
+      dataIndex: "ending_signature_id",
+      render: (ending_signature_id) => (
+        <img className="pointer-events-none" src={`https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${ending_signature_id}`} alt="" />
+      ),
+      width: "7rem"
     },
     {
       title: "วันที่สร้าง",
@@ -181,6 +201,7 @@ export default function page() {
       render: (date) => convertDateTime(date),
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ellipsis: true,
+      responsive: ["lg"],
     },
     {
       title: "อัพเดทล่าสุด",
@@ -188,6 +209,7 @@ export default function page() {
       render: (date) => convertDateTime(date),
       sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
       ellipsis: true,
+      responsive: ["lg"],
     },
   ];
   // สิ้นสุด
@@ -213,37 +235,145 @@ export default function page() {
     }
   }
   // สิ้นสุดของฟังชั่น
-
-  // ฟังชั่น ส่งออกข้อมูลเป็น Excel
-  const exportToExcel = () => {
-    // แปลงข้อมูลเป็น array ที่เหมาะสมกับ Excel
-    const formattedData = dataSource.map((item) => ({
-      "รหัสการบันทึก": item.index,
-      "ชื่อผู้ใช้": `${item.users.prefixes?.prefix_name} ${item.users.fullname_thai}`,
-      "ประเภทการทำงาน": item.shift_types.shift_type_name,
-      "เวลาเริ่มต้น": item.starting,
-      "สถานะการเข้างาน": item.check_in_status.check_in_status_name,
-      "เวลาออก": item.ending || "null",
-      "สถานะการออกงาน": item.check_out_status?.check_out_status_name || "null",
-      "เวลาบันทึก": new Date(item.created_at).toLocaleString("th-TH"),
-      "เวลาอัพเดท": new Date(item.updated_at).toLocaleString("th-TH"),
-    }));
-
-    // สร้าง worksheet
-    const ws = XLSX.utils.json_to_sheet(formattedData);
-
-    // สร้าง workbook
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "ข้อมูลการเข้าออกงาน");
-
-    // แปลงเป็นไฟล์ Blob
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const dataBlob = new Blob([excelBuffer], {
+  
+  const exportToExcel = async () => {
+    setStatusExport(true);
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("ข้อมูลการเข้าออกงาน");
+  
+    worksheet.columns = [
+      { header: "รหัสการบันทึก", key: "index", width: 15 },
+      { header: "ชื่อผู้ใช้", key: "user", width: 25 },
+      { header: "ประเภทการทำงาน", key: "shift_type", width: 20 },
+      { header: "เวลาเริ่มต้น", key: "starting", width: 15 },
+      { header: "สถานะการเข้างาน", key: "check_in_status", width: 20 },
+      { header: "ลงชื่อเข้า", key: "starting_signature", width: 20 },
+      { header: "เวลาออก", key: "ending", width: 15 },
+      { header: "สถานะการออกงาน", key: "check_out_status", width: 20 },
+      { header: "ลงชื่อออก", key: "ending_signature", width: 20 },
+    ];
+  
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { horizontal: "center" };
+    worksheet.getRow(1).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "D3D3D3" },
+    };
+  
+    for (let i = 0; i < dataSource.length; i++) {
+      const item = dataSource[i];
+    
+      if (i === 0) {
+        console.log("📌 แถวแรก:", item);
+        console.log("📌 starting_signature_id:", item.starting_signature_id);
+        console.log("📌 URL:", `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.starting_signature_id}`);
+      }
+    
+      const startingSignatureUrl = `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.starting_signature_id}`;
+      const endingSignatureUrl = `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.ending_signature_id}`;
+    
+      let startingImageId = null;
+      let endingImageId = null;
+  
+      // ดึงรูปภาพลายเซ็นเข้า
+      if (item.starting_signature_id) {
+        try {
+          const response = await fetch(startingSignatureUrl);
+          console.log(`Starting Signature Response Status: ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`ไม่สามารถดึงรูปภาพลายเซ็นเข้าได้: ${response.statusText}`);
+          }
+          const blob = await response.blob();
+          console.log(`Starting Signature Blob Type: ${blob.type}`); // ตรวจสอบประเภทไฟล์
+          const arrayBuffer = await blob.arrayBuffer();
+          const base64Image = Buffer.from(arrayBuffer).toString("base64");
+  
+          // กำหนด extension ตามประเภทไฟล์
+          const extension = blob.type.includes("png") ? "png" : "jpeg";
+          startingImageId = workbook.addImage({
+            base64: `data:image/${extension};base64,${base64Image}`,
+            extension: extension,
+          });
+        } catch (error) {
+          console.error("Error fetching starting signature:", error.message);
+        }
+      }
+  
+      // Debug: ตรวจสอบ ending_signature_id
+      console.log(`Ending Signature ID: ${item.ending_signature_id}`);
+      console.log(`Ending Signature URL: ${endingSignatureUrl}`);
+  
+      // ดึงรูปภาพลายเซ็นออก
+      if (item.ending_signature_id) {
+        try {
+          const response = await fetch(endingSignatureUrl);
+          console.log(`Ending Signature Response Status: ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`ไม่สามารถดึงรูปภาพลายเซ็นออกได้: ${response.statusText}`);
+          }
+          const blob = await response.blob();
+          console.log(`Ending Signature Blob Type: ${blob.type}`);
+          const arrayBuffer = await blob.arrayBuffer();
+          const base64Image = Buffer.from(arrayBuffer).toString("base64");
+  
+          const extension = blob.type.includes("png") ? "png" : "jpeg";
+          endingImageId = workbook.addImage({
+            base64: `data:image/${extension};base64,${base64Image}`,
+            extension: extension,
+          });
+        } catch (error) {
+          console.error("Error fetching ending signature:", error.message);
+        }
+      }
+  
+      const row = worksheet.addRow({
+        index: item.index,
+        user: `${item.users.prefixes?.prefix_name} ${item.users.fullname_thai}`,
+        shift_type: item.shift_types.shift_type_name,
+        starting: item.starting,
+        check_in_status: item.check_in_status.check_in_status_name,
+        starting_signature: startingImageId ? "" : "ไม่มีลายเซ็น",
+        ending: item.ending || "ไม่มีข้อมูล",
+        check_out_status: item.check_out_status?.check_out_status_name || "ไม่มีข้อมูล",
+        ending_signature: endingImageId ? "" : "ไม่มีลายเซ็น",
+      });
+  
+      if (startingImageId) {
+        worksheet.addImage(startingImageId, {
+          tl: { col: 5, row: row.number - 1 },
+          ext: { width: 100, height: 50 },
+        });
+      }
+  
+      if (endingImageId) {
+        worksheet.addImage(endingImageId, {
+          tl: { col: 8, row: row.number - 1 },
+          ext: { width: 100, height: 50 },
+        });
+      }
+  
+      row.height = 60;
+      row.alignment = { vertical: "middle", horizontal: "center" };
+    }
+  
+    worksheet.eachRow((row, rowNumber) => {
+      if (rowNumber > 1) {
+        row.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: rowNumber % 2 === 0 ? "F5F5F5" : "FFFFFF" },
+        };
+      }
+    });
+  
+    const buffer = await workbook.xlsx.writeBuffer();
+    const dataBlob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
-
-    // ดาวน์โหลดไฟล์
-    saveAs(dataBlob, "ข้อมูลการเข้าออกงาน.xlsx");
+    const date = new Date().toLocaleDateString("th-TH").replace(/\//g, "-");
+    saveAs(dataBlob, `ข้อมูลการเข้าออกงาน_${date}.xlsx`);
+    setStatusExport(false);
   };
   // สิ้นสุดของฟังชั่น
 
@@ -305,10 +435,10 @@ export default function page() {
         <Button
           className="px-4 py-2 text-sm font-semibold disabled:opacity-50 rounded-md bg-green-800 hover:bg-green-700 transition-all text-white shadow-sm"
           onClick={exportToExcel}
-          disabled={!dataSource}
+          disabled={!dataSource || statusExport}
           label={
             <p className="flex gap-1 items-center">
-              <Sheet size={15} strokeWidth={2} /> บันทึก Excel <ExternalLink size={10} />
+              {statusExport ? <>กำลังบันทึก...</> : <><Sheet size={15} strokeWidth={2} /> บันทึก Excel <ExternalLink size={10} /></>}
             </p>
           }
         />

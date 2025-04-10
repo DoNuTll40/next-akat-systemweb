@@ -17,7 +17,7 @@ export default function SignaturePadModal() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    const ratio = window.devicePixelRatio || 1; // ใช้ DPI จริงของอุปกรณ์
+    const ratio = window.devicePixelRatio; // ใช้ DPI จริงของอุปกรณ์
 
     // ตั้งค่าขนาด canvas ตาม DPI ของจอ
     canvas.width = canvas.offsetWidth * ratio;
@@ -111,7 +111,7 @@ export default function SignaturePadModal() {
         <div className="flex flex-col items-center mt-2 gap-1">
           <div className="flex gap-1 items-center justify-center w-full">
             <Signature size={18} strokeWidth={1.5} />
-            <p className="text-lg font-semibold">กรุณาวาดลายเซ็น</p>
+            <p className="text-lg font-semibold">กรุณาวาดลายเซ็นก่อนใช้งานระบบ</p>
           </div>
           <canvas
             ref={canvasRef}

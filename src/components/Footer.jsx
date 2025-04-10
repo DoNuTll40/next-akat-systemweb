@@ -1,9 +1,9 @@
 "use client"
 
 import axios from "@/configs/axios.mjs"
-import { Popover } from "antd"
+import { convertDate } from "@/services/convertDate"
+import { Popover, Timeline } from "antd"
 import { BookUser } from "lucide-react"
-import { Dialog } from "primereact/dialog"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
@@ -34,29 +34,40 @@ export default function Footer() {
       setAllVersionDetail([])
     }
   };
-  
-  const latestVersion = allVersionDetail?.reduce((latest, current) => {
-    return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
-  }, allVersionDetail[0] || null);
+
+  // หาเวอร์ชั่นสูงสุด
+  const latestVersion = allVersionDetail.reduce((max, current) => {
+    const currentVersion = current.api_versions.api_version_name;
+    return currentVersion > max ? currentVersion : max;
+  }, allVersionDetail[0]?.api_versions?.api_version_name);
+
+  // กรองข้อมูลเฉพาะเวอร์ชั่นล่าสุด
+  const latestData = allVersionDetail.filter(item => item.api_versions?.api_version_name === latestVersion);
+
+  // แปลง latestData ให้เป็นโครงสร้างที่ Timeline ต้องการ
+  const contentVersionDetail = latestData.map((item) => ({
+    color: "green",
+    children: (
+      <div className="max-w-[50vw] font-sarabun">{item.api_version_detail_comment} ({convertDate(item.updated_at)})</div>
+    ),
+  }));
 
   const content = (
-    <ul>
-      <li>{latestVersion?.api_version_detail_comment}</li>
-    </ul>
+    <Timeline items={contentVersionDetail} />
   );
 
   const title = (
     <div className="flex gap-1 items-center text-md">
       <BookUser size={16} />
-      <p>รายละเอียด</p>
+      <p>รายละเอียด เวอร์ชั่น {latestVersion}</p>
     </div>
   )
 
   return (
-    <div className="bg-white hidden w-full gap-2 md:flex justify-center items-center text-xs min-h-8 border-t border-gray-200 line-clamp-1">
+    <div className="bg-white hidden w-full gap-2 md:flex justify-center items-center text-xs min-h-8 border-t border-gray-200 line-clamp-1 hover:cursor-default">
       <p>&copy; Copyright 2025 โรงพยาบาลอากาศอำนวย</p>
       <Popover content={content} title={title}>
-        <p>Version {latestVersion?.api_versions?.api_version_name}</p>
+        <p>เวอร์ชั่น {latestVersion}</p>
       </Popover>
     </div>
   )

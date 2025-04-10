@@ -6,19 +6,19 @@ import { Lock, X } from "lucide-react";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 import AppHook from "@/hooks/AppHook.mjs";
-import { Watermark } from "antd";
+import { Avatar, Watermark } from "antd";
 
 export default function ProfileModal() {
   const { setShowModalProfile } = AppHook();
   const { user } = AuthHook();
   const [signatureUrl, setSignatureUrl] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
 
   const fetchSignature = async () => {
     try {
       let token = localStorage.getItem("token");
-      const rs = await axios.post(
+      const rs = await axios.get(
         "/auth/fetchSignature",
-        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -38,8 +38,34 @@ export default function ProfileModal() {
     }
   };
 
+  const fetchProfile = async () => {
+    try {
+      let token = localStorage.getItem("token")
+
+      const rs = await axios.get("/auth/fetchImage", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        responseType: "blob"
+      })
+
+      if(rs.status === 200){
+        const blob = rs.data;
+        const url = window.URL.createObjectURL(blob);
+        setProfileImage(url); // เก็บ URL ใน state
+      }
+
+      // ปล่อย URL เมื่อ component ถูก unmount
+      return () => window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.log(err)
+      setProfileImage(null)
+    }
+  }
+
   useEffect(() => {
     fetchSignature();
+    fetchProfile();
   }, []);
 
   return (
@@ -68,11 +94,13 @@ export default function ProfileModal() {
             </div>
             <Watermark content="โรงพยาบาลอากาศอำนวย" rootClassName="font-sarabun" className="font-sarabun">
             <div className="py-4 px-2 h-[63vh] flex justify-between flex-col font-sarabun bg-[#E9E9EB] rounded-br-xl">
-              <img
-                className="max-w-[200px] mx-auto mt-4"
-                src="/hospital/images/profile.jpg"
-                alt=""
-              />
+              <div className="flex justify-center pointer-events-none">
+                <Avatar
+                  shape="square"
+                  size={200}
+                  src={profileImage ? profileImage : `/hospital/images/profile.jpg`}
+                />
+              </div>
               <div className="text-center">
                 <p className="font-black text-xl">{user.fullname_thai}</p>
                 <p className="text-lg font-semibold">
