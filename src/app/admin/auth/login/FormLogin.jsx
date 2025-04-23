@@ -65,7 +65,7 @@ export default function FormLogin() {
                         onChange={hdlChange} 
                         placeholder="ชื่อผู้ใช้งาน" 
                         type="text" 
-                        autoComplete="username webauthn"
+                        autoComplete="off"
                         required
                     />
                 </div>
