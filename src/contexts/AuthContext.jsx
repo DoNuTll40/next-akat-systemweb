@@ -73,7 +73,7 @@ function AuthContextProvider({ children }) {
         toast.success(rs.data?.message);
         localStorage.removeItem("token");
         localStorage.removeItem("isAuthen");
-        router.push("/admin/login")
+        router.push("/admin/auth/login")
         setToken(null)
         setUser(null)
       }
