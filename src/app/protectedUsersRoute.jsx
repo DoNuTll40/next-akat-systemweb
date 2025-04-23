@@ -36,7 +36,7 @@ export default function ProtectedUsersRoute({ children }) {
     return <LoadingPage />;
   }
 
-  return user?.status?.toLowerCase() === "user" ? (
+  return user?.status?.toLowerCase() === "user" || user?.status?.toLowerCase() === "admin" ? (
     <>{children}</>
   ) : (
     <Forbidden />
