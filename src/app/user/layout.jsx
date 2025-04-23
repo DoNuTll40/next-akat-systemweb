@@ -10,6 +10,7 @@ import AuthHook from "@/hooks/AuthHook.mjs";
 import { IdleTimerProvider } from "react-idle-timer";
 import { toast } from "react-toastify";
 import ProtectedUsersRoute from "../protectedUsersRoute";
+import SlideAlert from "@/components/SlideAlert";
 
 export default function Layout({ children }) {
   const { showModalProfile } = AppHook();
@@ -40,7 +41,10 @@ export default function Layout({ children }) {
           <div className="flex flex-grow overflow-hidden">
             <Sidebar className="flex-shrink-0 w-64" />
             <div className="flex flex-col flex-grow overflow-hidden">
-              <div className="flex-grow overflow-y-auto p-4">{children}</div>
+              <div className="flex-grow overflow-y-auto p-4 pt-14 relative max-w-full bg-gray-300">
+                <SlideAlert />
+                {children}
+              </div>
               <Footer className="flex-shrink-0" />
             </div>
           </div>

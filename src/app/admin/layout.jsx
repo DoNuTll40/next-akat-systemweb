@@ -12,6 +12,7 @@ import SignaturePadModal from "@/components/modals/SignaturePadModal";
 import { useEffect, useState } from "react";
 import ProfileModal from "@/components/modals/ProfileModal";
 import AppHook from "@/hooks/AppHook.mjs";
+import SlideAlert from "@/components/SlideAlert";
 
 export default function Layout({ children }) {
   const { showModalProfile } = AppHook();
@@ -47,7 +48,8 @@ export default function Layout({ children }) {
           <div className="flex flex-grow overflow-hidden">
             <Sidebar className="max-w-[16rem] flex-shrink-0" />
             <div className="flex flex-col flex-grow overflow-hidden">
-              <div className="flex-grow overflow-y-auto p-4 max-w-full bg-gray-300">
+              <div className="flex-grow overflow-y-auto p-4 pt-14 relative max-w-full bg-gray-300">
+                <SlideAlert />
                 {children}
               </div>
               <Footer className="flex-shrink-0 h-[2rem] min-h-[2rem]" />
