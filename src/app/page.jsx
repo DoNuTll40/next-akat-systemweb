@@ -1,16 +1,12 @@
 
 "use client"
 
-import AuthHook from "@/hooks/AuthHook.mjs";
 import GpsHook from "@/hooks/GpsHook.mjs";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { user } = AuthHook();
   const { error, loading, locationStatus } = GpsHook();
-  const router = useRouter();
 
   const [isFromTrustedNetwork, setIsFromTrustedNetwork] = useState(false);
 
@@ -39,11 +35,6 @@ export default function Home() {
         <marquee>Out of Location</marquee>
       </div>
     )
-  }
-
-  if(user){
-    let path = user.status.toLowerCase();
-    router.push(`/${path}`);
   }
 
   return (
