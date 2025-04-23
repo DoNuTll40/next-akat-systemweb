@@ -11,7 +11,7 @@ import axios from "@/configs/axios.mjs";
 import { useRouter } from "next/navigation";
 
 export default function OtpInput() {
-  const { showModalOtp, login, setShowModalOtp, verify, setInputLogin, user } = AuthHook();
+  const { showModalOtp, login, setShowModalOtp, verify, setInputLogin, user, setUser } = AuthHook();
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(5 * 60);
   const [disabled, setDisabled] = useState(false);
@@ -71,20 +71,30 @@ export default function OtpInput() {
       if (rs.status === 200) {
         toast.success(rs.data?.message);
         setTimeLeft(5 * 60);
-        setShowModalOtp(false);
-        verify();
         setInputLogin({ username: "", password: "" })
 
-        const status = user.status; // ป้องกัน null และทำเป็นตัวพิมพ์เล็กทั้งหมด
+        const rs2 = await axios.post("/auth/authVerifyToken", {}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        
+        if(rs2.status === 200){
+          setUser(rs2.data.data)
+          localStorage.setItem("isAuthen", JSON.stringify(rs2.data?.data))
+          
+          let status = rs2.data.data.status.toLowerCase();
 
-        console.log(status)
-
-        if (status === "ADMIN") {
-          router.push("/admin");
-        } else if (status === "user") {
-          router.push("USER");
-        } else {
-          router.push("/"); // fallback
+          if (status === "admin") {
+            router.push("/admin");
+            setShowModalOtp(false);
+          } else if (status === "user") {
+            router.push("/user");
+            setShowModalOtp(false);
+          } else {
+            router.push("/");
+            setShowModalOtp(false);
+          }
         }
       }
 
