@@ -44,6 +44,7 @@ export default function page() {
   }, []);
 
   const fetchApi = async () => {
+    sessionStorage.setItem("fetchAttendanceTimeStamp", new Date());
     let token = localStorage.getItem("token");
     setToken(token)
     try {
@@ -106,6 +107,27 @@ export default function page() {
     text: date || 'ไม่มีข้อมูล',
     value: date || 'ไม่มีข้อมูล',
   }));
+
+  const attendanceSummary = {
+    checkIn: uniqueCheckInStatus.reduce((acc, status) => {
+      acc[status.value] = dataSource.filter(item => 
+        (item?.check_in_status?.check_in_status_name || 'ไม่มีข้อมูล') === status.value
+      ).length;
+      return acc;
+    }, {}),
+    checkOut: uniqueCheckOutStatus.reduce((acc, status) => {
+      acc[status.value] = dataSource.filter(item => 
+        (item?.check_out_status?.check_out_status_name || 'ไม่มีข้อมูล') === status.value
+      ).length;
+      return acc;
+    }, {}),
+    shiftTypes: uniqueCheckShiftType.reduce((acc, shift) => {
+      acc[shift.value] = dataSource.filter(item => 
+        (item?.shift_types?.shift_type_name || 'ไม่มีข้อมูล') === shift.value
+      ).length;
+      return acc;
+    }, {})
+  };
 
   // สร้างหัวของตาราง
   const columns = [
@@ -246,7 +268,7 @@ export default function page() {
   
     // กำหนดส่วนหัว
     worksheet.columns = [
-      { header: "รหัส", key: "index", width: 15 },
+      { header: "ลำดับ", key: "index", width: 15 },
       { header: "ชื่อ", key: "user", width: 25 },
       { header: "กะ", key: "shift_type", width: 20 },
       { header: "เวลาเข้า", key: "starting", width: 15 },
@@ -327,7 +349,7 @@ export default function page() {
           ext: { width: 100, height: 50 },
         });
       }
-      
+
       if (endingImageId !== null) {
         worksheet.addImage(endingImageId, {
           tl: { col: 8, row: row.number - 1 },
@@ -453,6 +475,23 @@ export default function page() {
           />
         </div>
       </div>
+
+      {/* scroll board */}
+      <div className="my-2 flex text-sm gap-2">
+            {Object.entries(attendanceSummary?.checkIn || {}).map(([status, count], index) => (
+              <p key={`checkIn-${index}`}>{`${status} : ${count} คน`}</p>
+            ))}
+            {Object.entries(attendanceSummary?.checkOut || {}).map(([status, count], index) => (
+              <p key={`checkOut-${index}`}>{`${status} : ${count} คน`}</p>
+            ))}
+            {Object.entries(attendanceSummary?.shiftTypes || {}).map(([shift, count], index) => (
+              <p key={`shift-${index}`}>{`${shift} : ${count} คน`}</p>
+            ))}
+        <div className="w-full text-xs text-end font-semibold my-2">
+          <p>ข้อมูล ณ {convertDateTime(sessionStorage.getItem("fetchAttendanceTimeStamp"))}</p>
+        </div>
+      </div>
+
 
       {/* ตาราง */}
       <Table

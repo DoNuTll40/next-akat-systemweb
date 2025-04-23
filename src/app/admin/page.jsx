@@ -52,9 +52,9 @@ export default function page() {
   ]
 
   return (
-    <div className="min-h-screen bg-white rounded p-4 shadow">
+    <div className="min-h-screen bg-white rounded-xl p-4 shadow">
       <p className="mb-4">ข้อมูลล่าสุด</p>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {dashBoard.map((el, index) => (
           <div key={index} className="border border-gray-300 p-4 rounded-xl shadow hover:shadow-md transform transition-all duration-150">
             <p>{el.name}</p>

@@ -8,6 +8,7 @@ import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/primereact.min.css";
 import '@ant-design/v5-patch-for-react-19';
 import { ToastContainer } from "react-toastify";
+import { GpsContextProvider } from "@/contexts/GpsContext";
 
 export default function Providers({ children }) {
   const value = {
@@ -18,11 +19,13 @@ export default function Providers({ children }) {
     <AppContextProvider>
       <AuthContextProvider>
         <SidebarContextProvider>
+          <GpsContextProvider>
           <PrimeReactProvider value={value}>
             <NextTopLoader showSpinner={false}/>
               <ToastContainer autoClose={2000} theme="colored" closeOnClick />
               {children}
           </PrimeReactProvider>
+          </GpsContextProvider>
         </SidebarContextProvider>
       </AuthContextProvider>
     </AppContextProvider>

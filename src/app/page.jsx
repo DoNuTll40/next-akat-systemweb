@@ -1,11 +1,48 @@
-import { Button } from "primereact/button";
+
+"use client"
+
+import GpsHook from "@/hooks/GpsHook.mjs";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+
+  const { error, loading, locationStatus } = GpsHook();
+
+  const [isFromTrustedNetwork, setIsFromTrustedNetwork] = useState(false);
+
+  const allowedIps = [
+    "202.80.228.44",
+  ];
+
+  useEffect( async () => {
+    const rs = await axios.get("https://api.ipify.org?format=json")
+    setIsFromTrustedNetwork(allowedIps.includes(rs.data.ip));
+  }, [])
+
+  if(loading){
+    return (
+      <div className="flex items-center justify-center h-dvh">
+        <p>Loading... </p>
+      </div>
+    )
+  }
+
+  if(locationStatus.status === "error" && isFromTrustedNetwork){
+
+    return (
+      <div className="flex h-dvh justify-center items-center flex-col text-2xl">
+        <p>{locationStatus.name}</p>
+        <marquee>Out of Location</marquee>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex justify-center items-center h-screen text-2xl">
-      <div className="flex gap-2 items-end">
-        <h1>Hello World </h1>
-        <Button className="bg-green-300 focus:outline-0 px-4 py-0.5 text-4xl" label="test" />
+    <div className="flex justify-center items-center h-screen">
+      <div className="flex gap-2 items-end flex-col w-full">
+        <p>{locationStatus.name} {error}</p>
+        <marquee behavior="" direction="">ระบบกำลังพัฒนา....</marquee>
       </div>
     </div>
   );
