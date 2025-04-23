@@ -75,7 +75,7 @@ export default function OtpInput() {
         verify();
         setInputLogin({ username: "", password: "" })
         let path = user.status.toLowerCase();
-        router.push(`/${path}`);
+        router.push(`/`);
       }
 
     } catch (err) {
