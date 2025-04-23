@@ -158,7 +158,7 @@ export default function ProfileModal() {
                   />
                 </div>
                 <div className="text-center">
-                  <p className="font-black text-xl">{user.fullname_thai}</p>
+                  <p className="font-black text-xl">{user.prefixes.prefix_name} {user.fullname_thai}</p>
                   <p className="text-lg font-semibold">{user.positions?.position_name}</p>
                   <p className="font-semibold">{user.departments?.department_name}</p>
                 </div>

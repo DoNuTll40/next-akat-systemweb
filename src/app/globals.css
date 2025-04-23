@@ -128,8 +128,12 @@ input:focus {
   @apply py-1
 }
 
-.ant-tooltip-open, .ant-tag, .ant-popover-content, .ant-popconfirm-buttons button {
+.ant-tooltip-open, .ant-tag, .ant-popover-content, .ant-popconfirm-buttons button, .ant-modal-content, .ant-steps-item {
   @apply font-sarabun
+}
+
+.ant-steps-item-title {
+  @apply font-semibold
 }
 
 .ant-table-thead {
