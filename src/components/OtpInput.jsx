@@ -74,7 +74,8 @@ export default function OtpInput() {
         setShowModalOtp(false);
         verify();
         setInputLogin({ username: "", password: "" })
-        router.push("/admin");
+        let path = user.status.toLowerCase();
+        router.push(`/${path}`);
       }
 
     } catch (err) {

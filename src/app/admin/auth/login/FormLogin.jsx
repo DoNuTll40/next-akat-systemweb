@@ -37,7 +37,7 @@ export default function FormLogin() {
 
     const hdlChange = (e) => {
         setErrMsg(null)
-        setInputLogin(( prev ) => setInputLogin({ ...prev, [e.target.name]: e.target.value }));
+        setInputLogin((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
     return (
