@@ -74,13 +74,15 @@ export default function OtpInput() {
         setShowModalOtp(false);
         verify();
         setInputLogin({ username: "", password: "" })
-        
-        const status = user?.status?.toLowerCase(); // ป้องกัน null และทำเป็นตัวพิมพ์เล็กทั้งหมด
 
-        if (status === "admin") {
+        const status = user.status; // ป้องกัน null และทำเป็นตัวพิมพ์เล็กทั้งหมด
+
+        console.log(status)
+
+        if (status === "ADMIN") {
           router.push("/admin");
         } else if (status === "user") {
-          router.push("/user");
+          router.push("USER");
         } else {
           router.push("/"); // fallback
         }
