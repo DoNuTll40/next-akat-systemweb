@@ -103,7 +103,7 @@ export default function FormSignIn() {
           />
           <Step
             title=" กรอกเลขบัตรประชาชน"
-            description="กรอกเลขบัตรประชาชนที่หน้าเว็บ แล้วกด ยืนยัน ก็เสร็จสิ้นขั้นตอน สามารถนำ username/password จากระบบ backoffice มาใช้ได้เลย"
+            description="กรอกเลขบัตรประชาชนที่หน้าเว็บ แล้วกด ยืนยัน ก็เสร็จสิ้นขั้นตอน หลังจากนั้น กดเข้าสู่ระบบ แล้วสามารถนำ username/password จากระบบ backoffice มาใช้ได้เลย"
             status="process"
           />
         </Steps>
@@ -182,7 +182,7 @@ export default function FormSignIn() {
           className="text-center text-xs mt-5 hover:underline underline-offset-2 hover:text-blue-800 transition"
           href={"/admin/auth/login"}
         >
-          ย้อนกลับ
+          เข้าสู่ระบบ
         </Link>
       </form>
     </div>

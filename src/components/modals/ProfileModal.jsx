@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 export default function ProfileModal() {
   const { setShowModalProfile } = AppHook();
-  const { user } = AuthHook();
+  const { user, verify } = AuthHook();
 
   const [signatureUrl, setSignatureUrl] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
@@ -56,10 +56,20 @@ export default function ProfileModal() {
 
       if (rs.status === 200) {
         const blob = rs.data;
+  
+        // แสดงภาพ preview
         const url = window.URL.createObjectURL(blob);
         setProfileImage(url);
+  
+        // แปลง blob เป็น base64
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String = reader.result;
+          setInput((prev) => ({ ...prev, image: base64String }));
+        };
+        reader.readAsDataURL(blob);
       }
-
+  
       return () => window.URL.revokeObjectURL(url);
     } catch (err) {
       console.log(err);
@@ -100,12 +110,16 @@ export default function ProfileModal() {
   const hdlSubmit = async () => {
     setLoading(true);
     let token = localStorage.getItem("token");
+
     try {
+      if(!input.image){}
+
       const rs = await axios.put("/auth/editUser", input, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (rs.status === 200) {
         toast.success(rs.data.message);
+        verify()
       }
     } catch (err) {
       console.log(err);
@@ -198,11 +212,25 @@ export default function ProfileModal() {
                 <div className="w-full">
                   <div className="flex flex-col gap-1 my-2">
                     <p className="text-sm font-semibold">ชื่อไทย</p>
-                    <Input size="large" className="shadow font-sarabun" value={input.fullname_thai} placeholder="ชื่อไทย" disabled={loading} />
+                    <Input
+                      size="large"
+                      className="shadow font-sarabun"
+                      value={input.fullname_thai}
+                      placeholder="ชื่อไทย"
+                      disabled={loading}
+                      onChange={(e) => setInput(prev => ({ ...prev, fullname_thai: e.target.value }))}
+                    />
                   </div>
                   <div className="flex flex-col gap-1 my-2">
                     <p className="text-sm font-semibold">ชื่ออังกฤษ</p>
-                    <Input size="large" className="shadow font-sarabun" value={input.fullname_english} placeholder="ชื่ออังกฤษ" disabled={loading} />
+                    <Input
+                      size="large"
+                      className="shadow font-sarabun"
+                      value={input.fullname_english}
+                      placeholder="ชื่ออังกฤษ"
+                      disabled={loading}
+                      onChange={(e) => setInput(prev => ({ ...prev, fullname_english: e.target.value }))}
+                    />
                   </div>
                 </div>
               </div>
@@ -222,7 +250,14 @@ export default function ProfileModal() {
             <div className="w-full">
               <div className="flex flex-col gap-1 my-2">
                 <p className="text-sm font-semibold">Email</p>
-                <Input size="large" className="shadow" value={input.email} placeholder="email" disabled={loading} />
+                <Input
+                  size="large"
+                  className="shadow"
+                  value={input.email}
+                  placeholder="email"
+                  disabled={loading}
+                  onChange={(e) => setInput(prev => ({ ...prev, email: e.target.value }))}
+                />
               </div>
             </div>
           </div>

@@ -153,9 +153,9 @@ export default function SideBar() {
       onMouseLeave={() => setOnHover(false)}
     >
       {isOpen && (
-        <div className="pt-2 ml-1 h-fit overflow-hidden flex flex-col w-64 select-none">
+        <div className="pt-0 ml-1 h-fit overflow-hidden flex flex-col w-64 select-none">
           <div className={`bg-white rounded-md ${isMini && !onHover ? "max-w-[18%]" : ""}`}></div>
-          <div className="my-2 mb-0.5 flex flex-col gap-1.5 overflow-auto">
+          <div className="my-2 mb-0.5 flex flex-col gap-1.5 overflow-auto sidebar">
             {(role?.toLowerCase() === "admin" ? adminSideBar : userSideBar).map((item, index) => (
               <div key={index}>
                 {item.submenu && item.submenu.length > 0 ? (
