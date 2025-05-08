@@ -5,7 +5,7 @@ import AuthHook from "@/hooks/AuthHook.mjs";
 import SideHook from "@/hooks/SideHook.mjs";
 import { Avatar, Dropdown } from "antd";
 import axios from "axios";
-import { AlignJustify, AlignLeft, IdCard, LogOut } from "lucide-react";
+import { AlignJustify, AlignLeft, IdCard, LogOut, PanelLeft, PanelLeftClose } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Header() {
@@ -67,15 +67,15 @@ export default function Header() {
   return (
     <div className="border-b border-gray-300 py-2 bg-white select-none">
         <div className="flex justify-between items-center mx-auto h-9 px-2">
-            <div className="font-semibold text-md flex items-center gap-1">
+            <div className="font-semibold text-md flex items-center gap-0.5">
               <button 
                 onClick={toggleSidebar}
                 className="p-4 rounded-lg hover:cursor-pointer"
               >
                   {isOpen ? (
-                      <AlignLeft size={20} />
+                      <PanelLeftClose strokeWidth={1.5} size={22} />
                   ) : (
-                      <AlignJustify size={20} />
+                      <PanelLeft strokeWidth={1.5} size={22} />
                   )}
               </button>
                 <p>{ user?.status === "ADMIN" ? "ผู้ดูแลระบบ" : "ผู้ใช้งาน"}</p>

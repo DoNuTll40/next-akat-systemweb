@@ -73,17 +73,15 @@ export default function SideBar() {
       path: "/user",
       title: "หน้าแรก",
     },
-    // {
-    //   icon: <BookText size={22} strokeWidth={1} />,
-    //   name: "ฟอร์ม",
-    //   path: "/user/form",
-    //   title: "ฟอร์ม",
-    //   submenu: [
-    //     { name: "ฟอร์ม IDP", path: "/user/form/ipd" },
-    //     { name: "ฟอร์ม OPD", path: "/user/form/opd" },
-    //     { name: "ฟอร์ม ER", path: "/user/form/er" },
-    //   ],
-    // },
+    {
+      icon: <BookText size={22} strokeWidth={1} />,
+      name: "Medical Record Audit",
+      path: "/mra",
+      title: "Medical Record Audit",
+      status: "ADMIN",
+      lock: <Lock size={15} strokeWidth={1} />,
+      unLock: <LockOpen size={15} strokeWidth={1} />,
+    },
     {
       icon: <ShieldUser size={22} strokeWidth={1} />,
       name: "ผู้ดูแลระบบ",

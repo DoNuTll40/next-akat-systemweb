@@ -1,0 +1,165 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "/hospital",
+  "redirects": [
+    {
+      "source": "/hospital/",
+      "destination": "/hospital",
+      "basePath": false,
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^/hospital/$"
+    },
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "dynamicRoutes": [],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/admin/attendance/attendance-record",
+      "regex": "^/admin/attendance/attendance\\-record(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/attendance/attendance\\-record(?:/)?$"
+    },
+    {
+      "page": "/admin/auth/login",
+      "regex": "^/admin/auth/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/auth/login(?:/)?$"
+    },
+    {
+      "page": "/admin/auth/sign-in",
+      "regex": "^/admin/auth/sign\\-in(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/auth/sign\\-in(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/api-details",
+      "regex": "^/admin/settings/api\\-details(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/api\\-details(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/api-version",
+      "regex": "^/admin/settings/api\\-version(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/api\\-version(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/carousel",
+      "regex": "^/admin/settings/carousel(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/carousel(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/checkin",
+      "regex": "^/admin/settings/checkin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/checkin(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/checkout",
+      "regex": "^/admin/settings/checkout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/checkout(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/holiday",
+      "regex": "^/admin/settings/holiday(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/holiday(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/shift",
+      "regex": "^/admin/settings/shift(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/shift(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/web-details",
+      "regex": "^/admin/settings/web\\-details(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/web\\-details(?:/)?$"
+    },
+    {
+      "page": "/admin/settings/web-version",
+      "regex": "^/admin/settings/web\\-version(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/web\\-version(?:/)?$"
+    },
+    {
+      "page": "/mra",
+      "regex": "^/mra(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mra(?:/)?$"
+    },
+    {
+      "page": "/mra/form/ipd",
+      "regex": "^/mra/form/ipd(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mra/form/ipd(?:/)?$"
+    },
+    {
+      "page": "/mra/settings/content-record",
+      "regex": "^/mra/settings/content\\-record(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mra/settings/content\\-record(?:/)?$"
+    },
+    {
+      "page": "/mra/settings/patient-services",
+      "regex": "^/mra/settings/patient\\-services(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mra/settings/patient\\-services(?:/)?$"
+    },
+    {
+      "page": "/user",
+      "regex": "^/user(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/user(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "RSC",
+    "varyHeader": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+    "prefetchHeader": "Next-Router-Prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "Next-Router-Segment-Prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  },
+  "rewrites": []
+}

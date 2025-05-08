@@ -80,7 +80,7 @@ export default function page() {
       ellipsis: true,
     },
   ];
-
+  
   return (
     <div className="bg-white p-4 rounded-xl select-none">
       <Table

@@ -167,3 +167,18 @@ input:focus {
 .ant-empty-description {
   @apply font-sarabun font-black text-[0.95rem]
 }
+
+/* ใน global.css หรือ tailwind layer */
+.ag-paging-panel {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .ag-paging-panel {
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: center;
+    overflow-x: auto;
+  }
+}

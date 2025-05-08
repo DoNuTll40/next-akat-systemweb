@@ -7,12 +7,15 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start -p 5101",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postbuild": "cp .next/routes-manifest.json public/routes.json"
   },
   "dependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@next/third-parties": "^15.2.2",
     "@tailwindcss/forms": "^0.5.10",
+    "ag-grid-community": "^33.2.4",
+    "ag-grid-react": "^33.2.4",
     "antd": "^5.24.5",
     "axios": "^1.8.3",
     "crypto-js": "^4.2.0",
@@ -21,6 +24,7 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.479.0",
+    "material-ripple-effects": "^2.0.1",
     "moment": "^2.30.1",
     "next": "^15.2.3",
     "nextjs-toploader": "^3.7.15",
@@ -29,6 +33,7 @@
     "react-data-table-component": "^7.7.0",
     "react-dom": "^19.0.0",
     "react-idle-timer": "^5.7.2",
+    "react-resizable": "^3.0.5",
     "react-toastify": "^11.0.5",
     "rimraf": "2.7.1",
     "signature_pad": "^5.0.7",

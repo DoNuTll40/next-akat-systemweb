@@ -41,62 +41,105 @@ function GpsContextProvider({ children }) {
     const [isFromTrustedNetwork, setIsFromTrustedNetwork] = useState(false); // จะเป็นจริงได้ก็ต่อเมื้อเราใช้เน็ต นอก รพ เท่านั้น ให้ใช้ตอนที่ locationStatus.status === "error" เท่านั้น!
   
     useEffect(() => {
+
+        // ฟังก์ชันตรวจว่าเป็นมือถือหรือไม่
+        const isMobileDevice = () => {
+            return /Mobi|Android|iPhone/i.test(navigator.userAgent);
+        };
+
         if (!navigator.geolocation) {
             setError("เบราว์เซอร์ของคุณไม่รองรับ GPS");
             setLoading(false);
             return;
         }
   
+        let lastPosition = null;
+        let lastTimestamp = null;
+
         const watcher = navigator.geolocation.watchPosition(
             (position) => {
-                setError(null); // รีเซ็ตข้อผิดพลาดถ้ามีการอัปเดตตำแหน่งสำเร็จ
+                setError(null); // รีเซ็ต error ถ้าอัปเดตตำแหน่งสำเร็จ
         
                 const newPosition = {
                     lat: position.coords.latitude,
                     lon: position.coords.longitude,
                 };
-                
-                // บันทึกค่าตำแหน่งปัจจุบัน
+        
+                const currentTime = Date.now();
+        
+                // ตรวจความแม่นยำของ GPS ความแม่นยำต้อง น้อยกว่า 100 ถึงผ่าน
+                if (isMobileDevice() && position.coords.accuracy > 100) {
+                    setLoading(false);
+                    setError("GPS ไม่แม่นยำพอ อาจมีการ spoof หรือจำลองตำแหน่ง");
+                    console.warn("Low GPS accuracy:", position.coords.accuracy);
+                    return;
+                }
+        
+                // ตรวจ jump ครั้งแรก (เริ่มจากตำแหน่งไกลผิดปกติ) ค่าเริ่มต้นที่ ระยะรัศมี 1 กม. คือ 1000 เมตร
+                const initialCenter = { lat: 17.598248230864677, lon: 103.97421612776841 }; // โรงพยาบาล
+                if (!lastPosition && haversineDistance(newPosition.lat, newPosition.lon, initialCenter.lat, initialCenter.lon) > 1000) {
+                    setLoading(false);
+                    setError("ตรวจพบว่าคุณเริ่มต้นจากตำแหน่งที่ไกลผิดปกติ อาจมีการ spoof GPS");
+                    console.warn("Initial GPS spoofing suspected");
+                    return;
+                }
+        
+                // ตรวจจับการเคลื่อนไหวเร็วเกินไป
+                if (lastPosition && lastTimestamp) {
+                    const distanceMoved = haversineDistance(
+                        lastPosition.lat,
+                        lastPosition.lon,
+                        newPosition.lat,
+                        newPosition.lon
+                    );
+                    const timeElapsed = (currentTime - lastTimestamp) / 1000;
+                    const speed = distanceMoved / timeElapsed;
+        
+                    if (speed > 50) {
+                        setLoading(false);
+                        setError("ตรวจพบความผิดปกติของตำแหน่ง GPS (เร็วเกินไป)");
+                        console.warn("GPS spoofing detected: speed =", speed);
+                        return;
+                    }
+                }
+        
+                lastPosition = newPosition;
+                lastTimestamp = currentTime;
+        
                 setCurrentPosition(newPosition);
-    
+        
                 // ตรวจสอบว่ายู่ในรัศมีของสถานที่ใดบ้าง
                 const foundLocation = locations.find((location) => {
-                        const distance = haversineDistance(
+                    const distance = haversineDistance(
                         newPosition.lat,
                         newPosition.lon,
                         location.lat,
                         location.lon
-                        );
+                    );
                     return distance <= location.radius;
                 });
-
-                // สร้างผลลัพท์ว่า อยู่นอกพื้นที่หรือไม่
+        
                 if (foundLocation) {
                     setLoading(false);
                     if (foundLocation.block) {
-                        // ถ้าอยู่ในพื้นที่ที่ block ไว้
                         setLocationStatus({ status: "error", name: `ตำแหน่งของคุณถูกจำกัด (${foundLocation.name})` });
                     } else {
-                        // ถ้าอยู่ในพื้นที่ปกติ
                         setLocationStatus({ status: "success", name: `คุณอยู่ใน ${foundLocation.name}` });
                     }
                 } else {
-                    // อยู่นอกพื้นที่ทั้งหมด
                     setLocationStatus({ status: "error", name: "คุณอยู่นอกพื้นที่ที่กำหนด" });
                 }
-
-    
             },
             (err) => {
                 setLoading(false);
                 setError(`ข้อผิดพลาด : ${err.message}`);
             },
             {
-                enableHighAccuracy: true, // เปิดความแม่นยำสูง
-                timeout: 10000, // เวลา สูงสุดในการ ขอ ข้อมูล 10 วิ
+                enableHighAccuracy: true,
+                timeout: 10000,
                 maximumAge: 0,
             }
-        );
+        );        
   
       return () => navigator.geolocation.clearWatch(watcher);
     }, []);

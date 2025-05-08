@@ -61,7 +61,7 @@ export default function FormLogin() {
                     <input 
                         name="username"
                         value={inputLogin?.username}
-                        className="w-full rounded-md transition py-2 text-md md:text-sm" 
+                        className="w-full rounded-md transition py-2 text-sm md:text-base" 
                         onChange={hdlChange} 
                         placeholder="ชื่อผู้ใช้งาน" 
                         type="text" 
@@ -81,7 +81,7 @@ export default function FormLogin() {
                         <input 
                             name="password"
                             value={inputLogin?.password}
-                            className="w-full rounded-md transition py-2 text-md md:text-sm" 
+                            className="w-full rounded-md transition py-2 text-sm md:text-base" 
                             onChange={hdlChange} 
                             placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;" 
                             type={showPassword ? "text" : "password"} 

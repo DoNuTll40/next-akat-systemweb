@@ -27,20 +27,11 @@ export default function Home() {
     )
   }
 
-  if(locationStatus.status === "error" && isFromTrustedNetwork){
-
-    return (
-      <div className="flex h-dvh justify-center items-center flex-col text-2xl">
-        <p>{locationStatus.name}</p>
-        <marquee>Out of Location</marquee>
-      </div>
-    )
-  }
-
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="flex gap-2 items-end flex-col w-full">
-        <p>{locationStatus.name} {error}</p>
+      <div className="flex gap-2 flex-col w-full">
+        <p className="text-center font-semibold text-lg">{locationStatus.name}</p>
+        <p className="text-center font-semibold text-base text-red-600">{error}</p>
         <marquee behavior="" direction="">ระบบกำลังพัฒนา....</marquee>
       </div>
     </div>
