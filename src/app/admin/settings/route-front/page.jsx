@@ -71,7 +71,7 @@ export default function Page() {
 
   useEffect(() => {
     getAllData();
-  })
+  }, [])
 
   const getAllData = async () => {
     let token = localStorage.getItem("token");
