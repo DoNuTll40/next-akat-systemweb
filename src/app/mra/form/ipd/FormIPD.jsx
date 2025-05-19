@@ -68,7 +68,7 @@ export default function FormIPD() {
       toast.error(err.response?.data?.message || err.message); // แจ้งเตือนเมื่อเกิดข้อผิดพลาด
       if(err.response.status === 409) { // สำหรับข้อผิดพลาด 409
         setUnSave(true) // เปลี่ยนสถานะยังไม่ถูกบันทึก
-        const FormData = JSON.parse(localStorage.getItem(`IPD_${an}`)) || contentData; // ดึงข้อมูลจาก localStorage
+        const FormData = JSON.parse(localStorage.getItem(`IPD_${an}`)); // ดึงข้อมูลจาก localStorage
         setRowData(FormData && FormData[0]?.form_ipd_content_of_medical_record_results); // กําหนดข้อมูลให้กับ rowData
         setLocalPatient(FormData && FormData[0]); // กําหนดข้อมูลให้กับ dataAn
       } else { // ถ้าไม่ใช่ข้อผิดพลาด 409
@@ -103,7 +103,11 @@ export default function FormIPD() {
       });
 
       localStorage.setItem(`IPD_${AN}`, JSON.stringify(rs.data.data)); // เก็บข้อมูลใน localStorage
-      setContentData(rs.data?.data); // กําหนดข้อมูลให้กับ contentData
+      setContentData(rs.data?.data);
+      const FormData = rs.data?.data; // กําหนดข้อมูลให้กับ FormData
+      setRowData(FormData && FormData[0]?.form_ipd_content_of_medical_record_results); // กําหนดข้อมูลให้กับ rowData
+      setLocalPatient(FormData && FormData[0]); // กําหนดข้อมูลให้กับ dataAn
+      
     } catch (err) {
       console.log(err);
     }
