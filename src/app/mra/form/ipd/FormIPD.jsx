@@ -75,7 +75,8 @@ export default function FormIPD() {
         setDataAn({}); // เคลียร์ข้อมูล AN
       }
       setLoadDataTrue(false); // เปลี่ยนสถานะการโหลดข้อมูล
-      setLoading(false); // เปลี่ยนสถานะการโหลด
+    } finally {
+      setLoading(false);
     }
   };
 
