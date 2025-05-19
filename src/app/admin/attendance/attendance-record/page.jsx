@@ -49,7 +49,7 @@ export default function page() {
     setToken(token)
     try {
       setData([])
-      const rs = await axios.get("/publicAPI/fetchDataAllAttendanceRecord", {
+      const rs = await axios.get("/public/fetchDataAllAttendanceRecord", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -83,8 +83,8 @@ export default function page() {
   const dataSource = data.map((item, index) => ({
     ...item,
     index: index + 1,
-    startingSignatureUrl: item.starting_signature_id && `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.starting_signature_id}`,
-    endingSignatureUrl: item.ending_signature_id && `https://akathos.moph.go.th/akatApi/publicAPI/signatureShowImage/${token}/${item.ending_signature_id}`,
+    startingSignatureUrl: item.starting_signature_id && `https://akathos.moph.go.th/api/public/signatureShowImage/${token}/${item.starting_signature_id}`,
+    endingSignatureUrl: item.ending_signature_id && `https://akathos.moph.go.th/api/public/signatureShowImage/${token}/${item.ending_signature_id}`,
   }));
   
   // ทำตัวเลือกใน filter จากข้อมูล
@@ -242,7 +242,7 @@ export default function page() {
   const searchApi = async () => {
     let token = localStorage.getItem("token");
     try {
-      const rs = await axios.get(`/publicAPI/searchAttendanceRecords/${search}`, {
+      const rs = await axios.get(`/public/searchAttendanceRecords/${search}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -387,7 +387,7 @@ export default function page() {
     if(!startDate || !endDate) return toast.warning("ไม่พบข้อมูลวันที่ ที่ต้องการค้นหา")
 
     try {
-      const rs = await axios.get(`/publicAPI/searchDateAttendanceRecord/${startDate}/${endDate}`, {
+      const rs = await axios.get(`/public/searchDateAttendanceRecord/${startDate}/${endDate}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

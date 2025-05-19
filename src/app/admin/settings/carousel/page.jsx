@@ -187,7 +187,7 @@ export default function Page() {
       title: "ภาพ",
       dataIndex: "carousel_id",
       render: (carousel_id) => (
-          <img key={carousel_id} src={`https://akathos.moph.go.th/akatApi/publicAPI/carouselShowImage/${carousel_id}`} alt="picture" />
+          <img key={carousel_id} src={`https://akathos.moph.go.th/api/public/carouselShowImage/${carousel_id}`} alt="picture" />
       ),
       width: "8rem", // เพิ่มความกว้างให้เหมาะสม
     },

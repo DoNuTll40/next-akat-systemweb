@@ -96,6 +96,12 @@
       "namedRegex": "^/admin/settings/holiday(?:/)?$"
     },
     {
+      "page": "/admin/settings/route-front",
+      "regex": "^/admin/settings/route\\-front(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings/route\\-front(?:/)?$"
+    },
+    {
       "page": "/admin/settings/shift",
       "regex": "^/admin/settings/shift(?:/)?$",
       "routeKeys": {},
@@ -132,10 +138,22 @@
       "namedRegex": "^/mra/settings/content\\-record(?:/)?$"
     },
     {
+      "page": "/mra/settings/overall-finding",
+      "regex": "^/mra/settings/overall\\-finding(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mra/settings/overall\\-finding(?:/)?$"
+    },
+    {
       "page": "/mra/settings/patient-services",
       "regex": "^/mra/settings/patient\\-services(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/mra/settings/patient\\-services(?:/)?$"
+    },
+    {
+      "page": "/mra/settings/review-status",
+      "regex": "^/mra/settings/review\\-status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/mra/settings/review\\-status(?:/)?$"
     },
     {
       "page": "/user",

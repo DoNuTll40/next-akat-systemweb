@@ -2,11 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "@/configs/axios.mjs";
-import { AgGridReact } from "ag-grid-react";
 import {
   AllCommunityModule,
   ModuleRegistry,
-  themeQuartz,
 } from "ag-grid-community";
 import { convertDateTime } from "@/services/convertDate";
 import MRAThemeHook from "@/hooks/MRAThemeHook.mjs";
@@ -29,23 +27,6 @@ export default function TableData() {
   const [editRowId, setEditRowId] = useState(null);
 
   const ripple = new Ripple();
-
-  useEffect(() => {
-    fetch("/hospital/routes.json")
-      .then((r) => r.json())
-      .then((data) => setRoutes(data.staticRoutes || data.pages || []));
-  }, []);
-
-  const theme = useMemo(() => {
-    return themeQuartz.withParams({
-      fontFamily: "Sarabun",
-      headerFontFamily: "Sarabun",
-      cellFontFamily: "Sarabun",
-      headerTextColor: themeMRA?.textHeaderTable,
-      headerBackgroundColor: themeMRA?.headerTableBg,
-      columnBorder: { color: "#ececec" },
-    });
-  }, [themeMRA]);
 
   const columnDefs = [
     {
@@ -345,7 +326,6 @@ export default function TableData() {
         quickFilterText={searchText}
         loading={loading}
         editRowId={editRowId}
-        theme={theme}
         onGridReady={() => {
           gridRef.current?.api?.sizeColumnsToFit();
         }}

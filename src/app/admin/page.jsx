@@ -16,7 +16,7 @@ export default function page() {
 
   const fetchDepartment = async () => {
     try {
-      const rs = await axios.get("/publicAPI/getDepartments");
+      const rs = await axios.get("/public/getDepartments");
       if(rs.status === 200){
         setDepartment(rs.data.data)
       }
@@ -26,7 +26,7 @@ export default function page() {
   }
   const fetchPrefix = async () => {
     try {
-      const rs = await axios.get("/publicAPI/getPrefixes");
+      const rs = await axios.get("/public/getPrefixes");
       if(rs.status === 200){
         setPrefix(rs.data.data)
       }
@@ -36,7 +36,7 @@ export default function page() {
   }
   const fetchPosition = async () => {
     try {
-      const rs = await axios.get("/publicAPI/getPositions");
+      const rs = await axios.get("/public/getPositions");
       if(rs.status === 200){
         setPosition(rs.data.data)
       }

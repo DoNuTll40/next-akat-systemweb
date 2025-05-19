@@ -46,8 +46,8 @@ export default function MRASidebar() {
       submenu: [
         { name: "กลุ่มคนไข้", path: "/mra/settings/patient-services", group: "ระบบ" },
         { name: "หัวข้อฟอร์ม", path: "/mra/settings/content-record", group: "ระบบ" },
-        // { name: "ประเภทการตรวจสอบ", path: "/mra/settings/types", group: "ระบบ" },
-        // { name: "ผู้ตรวจสอบ", path: "/mra/settings/auditors", group: "ระบบ" },
+        { name: "overall-finding", path: "/mra/settings/overall-finding", group: "ระบบ" },
+        { name: "review-status", path: "/mra/settings/review-status", group: "ระบบ" },
         { name: "ข้อมูลเวอร์ชั่น", path: "/mra/settings/version", group: "ทั่วไป" },
       ]
     },
