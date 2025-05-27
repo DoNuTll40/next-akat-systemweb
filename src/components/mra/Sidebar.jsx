@@ -26,21 +26,21 @@ export default function MRASidebar() {
 
   const sideMRA = [
     { icon: <House size={22} strokeWidth={1} />, name: "หน้าหลัก", path: "/mra" },
-    { icon: <LayoutDashboard size={22} strokeWidth={1} />, name: "แดชบอร์ด", path: "/mra/dashboard" },
+    // { icon: <LayoutDashboard size={22} strokeWidth={1} />, name: "แดชบอร์ด", path: "/mra/dashboard" },
     {
       icon: <ClipboardList size={22} strokeWidth={1} />, name: "แบบบันทึก", path: "/mra/form",
       submenu: [
         { name: "IPD", path: "/mra/form/ipd", group: "ฟอร์ม" },
-        { name: "OPD", path: "/mra/form/opd", group: "ฟอร์ม" },
+        // { name: "OPD", path: "/mra/form/opd", group: "ฟอร์ม" },
       ]
     },
-    {
-      icon: <FileText size={22} strokeWidth={1} />, name: "รายงาน", path: "/mra/reports",
-      submenu: [
-        { name: "รายงานการตรวจสอบ", path: "/mra/reports/summary", group: "รายงาน" },
-        { name: "รายงานรายผู้ตรวจ", path: "/mra/reports/auditor", group: "รายงาน" },
-      ]
-    },
+    // {
+    //   icon: <FileText size={22} strokeWidth={1} />, name: "รายงาน", path: "/mra/reports",
+    //   submenu: [
+    //     { name: "รายงานการตรวจสอบ", path: "/mra/reports/summary", group: "รายงาน" },
+    //     { name: "รายงานรายผู้ตรวจ", path: "/mra/reports/auditor", group: "รายงาน" },
+    //   ]
+    // },
     {
       icon: <Settings size={22} strokeWidth={1} />, name: "การตั้งค่า", path: "/mra/settings",
       submenu: [
@@ -48,7 +48,7 @@ export default function MRASidebar() {
         { name: "หัวข้อฟอร์ม", path: "/mra/settings/content-record", group: "ระบบ" },
         { name: "overall-finding", path: "/mra/settings/overall-finding", group: "ระบบ" },
         { name: "review-status", path: "/mra/settings/review-status", group: "ระบบ" },
-        { name: "ข้อมูลเวอร์ชั่น", path: "/mra/settings/version", group: "ทั่วไป" },
+        // { name: "ข้อมูลเวอร์ชั่น", path: "/mra/settings/version", group: "ทั่วไป" },
       ]
     },
   ];
@@ -83,7 +83,7 @@ export default function MRASidebar() {
 
   return (
     <div
-      className={`${isOpen ? (isMini ? `min-w-14 max-w-14 ${onHover ? "min-w-65 max-w-65" : ""}` : "min-w-65 max-w-65") : "w-0"} 
+      className={`${isOpen ? (isMini ? `min-w-14 max-w-14 ${onHover ? "min-w-65 max-w-65" : ""}` : "min-w-65 max-w-65") : "min-w-0"} 
         hidden md:flex justify-between flex-col text-sm top-0 h-full left-0 transition-all duration-200 ease-in-out overflow-hidden`}
       onMouseEnter={() => setOnHover(true)}
       onMouseLeave={() => setOnHover(false)}

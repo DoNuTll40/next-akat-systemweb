@@ -31,13 +31,13 @@ export default function SideBar() {
       path: "/user",
       title: "หน้าผู้ใช้ทั่วไป",
     },
-    {
-      icon: <LayoutDashboard size={22} strokeWidth={1} />,
-      name: "Dashboard",
-      path: "/admin/dashboard",
-      title: "แดชบอร์ด",
-      submenu: [],
-    },
+    // {
+    //   icon: <LayoutDashboard size={22} strokeWidth={1} />,
+    //   name: "Dashboard",
+    //   path: "/admin/dashboard",
+    //   title: "แดชบอร์ด",
+    //   submenu: [],
+    // },
     {
       icon: <CalendarClock size={22} strokeWidth={1} />,
       name: "รายการลงเวลา",
@@ -59,9 +59,9 @@ export default function SideBar() {
         { name: "ข้อมูลวันหยุด", path: "/admin/settings/holiday", group: "ระบบลงเวลา" },
         { name: "ข้อมูลเวอร์ชั่น API", path: "/admin/settings/api-version", group: "เวอร์ชั่น" },
         { name: "ข้อมูลรายละเอียด API", path: "/admin/settings/api-details", group: "เวอร์ชั่น" },
-        { name: "ข้อมูลเวอร์ชั่นหน้าเว็บ", path: "/admin/settings/web-version", group: "เวอร์ชั่น" },
-        { name: "ข้อมูลรายละเอียดหน้าเว็บ", path: "/admin/settings/web-details", group: "เวอร์ชั่น" },
-        { name: "Carousel", path: "/admin/settings/carousel", group: "หน้าเว็บ" },
+        // { name: "ข้อมูลเวอร์ชั่นหน้าเว็บ", path: "/admin/settings/web-version", group: "เวอร์ชั่น" },
+        // { name: "ข้อมูลรายละเอียดหน้าเว็บ", path: "/admin/settings/web-details", group: "เวอร์ชั่น" },
+        // { name: "Carousel", path: "/admin/settings/carousel", group: "หน้าเว็บ" },
       ],
     },
   ];
