@@ -1,15 +1,16 @@
 "use client";
 
+import ConfirmDeleteModal from "@/components/mra/modal/ConfirmDeleteModal";
 import MRAFormIPD from "@/components/mra/RenderForm/MRAFormIPD";
 import AGGridWrapper from "@/components/mra/Table/AGGridWrapper";
 import axios from "@/configs/axios.mjs";
 import MRAThemeHook from "@/hooks/MRAThemeHook.mjs";
-import { pdf, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
-import { saveAs } from "file-saver";
+import { PDFViewer } from "@react-pdf/renderer";
+import { Modal } from "antd";
 import { CircleAlert, CircleCheckBig } from "lucide-react";
 import Ripple from "material-ripple-effects";
 import moment from "moment/moment";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useIdleTimer } from "react-idle-timer";
 import { toast } from "react-toastify";
 
@@ -21,6 +22,8 @@ export default function FormIPD() {
   const [contentData, setContentData] = useState([]); 
   const [reviewStatus, setReviewStatus] = useState([]); // เก็บค่าตัวแปรการรีวิวที่ดึงมาจาก API
   const [unSave, setUnSave] = useState(false); // สถานะแจ้งเดือน่ยังไม่ถูกบันทึก
+
+  const [showModalDelete, setShowModalDelete] = useState(false);
 
   const [pdfReady, setPdfReady] = useState(false);
   const [pdfData, setPdfData] = useState(null);
@@ -88,8 +91,15 @@ export default function FormIPD() {
   }
 
   const hdlGetPatient = async (anValue) => { // ฟังก์ชันสําหรับการค้นหาข้อมูลคนไข้
+
+    const toastId = toast.loading("ระบบกำลังโหลดข้อมูล...", {
+      closeOnClick: true,
+      autoClose: 2000,
+    });
+
     setUnSave(false); // เปลี่ยนสถานะยังไม่ถูกบันทึก
     setLoading(true); // เปลี่ยนสถานะการโหลดข้อมูล
+
     try {
       const rs = await axios.get(`/private/mraIPD/fetchPatient/${anValue}`, {
         headers: {
@@ -99,17 +109,38 @@ export default function FormIPD() {
 
       // ถ้าค้นหา AN แล้วเจอข้อมูลให้เอาข้อมูลมาแสดง
       if (rs.status === 200) {
+
         setLoadDataTrue(true); // เปลี่ยนสถานะการโหลดข้อมูล
         setDataAn(rs.data?.data[0]); // เก็บข้อมมูล AN ไว้ใน state
         generateForm(rs.data?.data[0]?.an); // ส่งข้อมูล AN ไปยังฟังก์ชัน generateForm
+
+        toast.update(toastId, {
+          render: "โหลดข้อมูลสําเร็จ",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
+
       }
     } catch (err) {
       if(err.response.status === 409) { // สำหรับข้อผิดพลาด 409
+
         generateForm(anValue);
         setUnSave(true) // เปลี่ยนสถานะยังไม่ถูกบันทึก
+        toast.dismiss(toastId); // ปิด toast แบบไม่แสดง error
+        return;
+
       } else { // ถ้าไม่ใช่ข้อผิดพลาด 409
         setDataAn({}); // เคลียร์ข้อมูล AN
-        toast.error(err.response?.data?.message || err.message); // แจ้งเตือนเมื่อเกิดข้อผิดพลาด
+
+        toast.update(toastId, {
+          render: err.response?.data?.message || err.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+
+        return;
       }
       setLoadDataTrue(false); // เปลี่ยนสถานะการโหลดข้อมูล
     } finally {
@@ -132,6 +163,11 @@ export default function FormIPD() {
   });
 
   const generateForm = async (AN) => { // ฟังก์ชันสําหรับการสร้างฟอร์ม
+
+    const toastId = toast.loading("ระบบกำลังโหลดข้อมูลของฟอร์ม...", {
+      closeOnClick: true,
+    });
+
     try {
       const rs = await axios.post("/private/mraIPD", { patient_an: AN }, {
         headers: {
@@ -154,11 +190,30 @@ export default function FormIPD() {
 
         setSelectOverallFinding(selected);
       }
+
+      toast.update(toastId, {
+        render: "สร้างฟอร์มสําเร็จ",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
     } catch (err) {
+      toast.dismiss(toastId);
       console.log(err);
       if(err.response.status === 409) { // สำหรับข้อผิดพลาด 409
         hdlPreviewSubmit(); // ส่งข้อมูลไปยังฟังก์ชัน hdlPreviewSubmit
-        hdlResetState();
+        setDataAn({})
+        setLoadDataTrue(false)
+        setContentData([])
+        setReviewStatus([])
+        setUnSave(false)
+        setLocalPatient({}) 
+        setSelectOverallFinding([])
+        setSelectedReviewStatus(null)
+        setRowData([])
+        setOutput({})
+        setPdfReady(false);
+        setPdfData(null);
       }
     }
   };
@@ -470,6 +525,9 @@ export default function FormIPD() {
   }, [comment, selectedItem]);
 
   const hdlPreSubmit = async () => {
+
+    const toastId = toast.loading("ระบบกําลังบันทึกข้อมูล...");
+
     try {
       if(!output?.content) return toast.error("ไม่สามารถบันทึกได้ เนื่องจากไม่พบการเปลี่ยนแปลงในตาราง IPD");
 
@@ -479,20 +537,45 @@ export default function FormIPD() {
       }})
 
       if(rs.status === 200){
-        toast.success(rs.data.message);
-        hdlResetState()
+        toast.update(toastId, {
+          render: rs.data.message,
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
+        setDataAn({})
+        setLoadDataTrue(false)
+        setContentData([])
+        setReviewStatus([])
+        setUnSave(false)
+        setLocalPatient({}) 
+        setSelectOverallFinding([])
+        setSelectedReviewStatus(null)
+        setRowData([])
+        setOutput({})
+        setPdfReady(false);
+        setPdfData(null);
+        if(output?.review_status_id){
+          localStorage.removeItem(`IPD_${an}`);
+          hdlPreviewSubmit();
+        } else {
+          setAn("");
+        }
       }
 
     } catch (err) {
       console.error(err);
-      toast.error(err.response.data.message, {
+      toast.update(toastId, {
+        render:err.response.data.message,
+        type: "error",
+        isLoading: false,
         autoClose: 2000,
       });
     }
   }
 
   const hdlResetState = async () => {
-    // setAn("")
+    setAn("")
     setDataAn({})
     setLoadDataTrue(false)
     setContentData([])
@@ -507,43 +590,95 @@ export default function FormIPD() {
     setPdfData(null);
   }
 
+  console.log(dataAn)
+
   const hdlPreviewSubmit = async () => {
-    setPdfReady(false);
-    // 1. ดึงข้อมูล API (หรือใช้ข้อมูลที่มีใน state)
-    const rs = await axios.get(`/private/mraIPD/${an}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }) // หรือรับจาก props
 
-    const data = rs.data.data[0];
-    if(rs.status === 200){
-      setPdfReady(true);
-      setPdfData(data);
-      setDataAn({
-        fullname: data.patients.patient_fullname,
-        an: data.patients.patient_an,
-        hn: data.patients.patient_hn,
-        vstdate: moment(data.patients.patient_date_service).format("YYYY-MM-DD"),
-        regdate: moment(data.patients.patient_date_admitted).format("YYYY-MM-DD"),
-        dchdate: moment(data.patients.patient_date_discharged).format("YYYY-MM-DD"),
-      })
-      setLoadDataTrue(true);
+    const toastId = toast.loading("ระบบกำลังสร้างหน้า PDF ให้ กรุณารอสักครู่...");
 
-      setTimeout(() => {
-        if (pdfRef.current) {
-          pdfRef.current.focus();
-        }
-      }, 500);
+    try {
+      // 1. ดึงข้อมูล API (หรือใช้ข้อมูลที่มีใน state)
+      const rs = await axios.get(`/private/mraIPD/${an}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }) // หรือรับจาก props
+
+      const data = rs.data.data[0];
+      if(rs.status === 200){
+        toast.update(toastId, {
+          render: "สร้างหน้า PDF สําเร็จ",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        })
+        setPdfReady(true);
+        setPdfData(data);
+        setDataAn({
+          fullname: data.patients.patient_fullname,
+          an: data.patients.patient_an,
+          hn: data.patients.patient_hn,
+          vstdate: moment(data.patients.patient_date_service).format("YYYY-MM-DD"),
+          regdate: moment(data.patients.patient_date_admitted).format("YYYY-MM-DD"),
+          dchdate: moment(data.patients.patient_date_discharged).format("YYYY-MM-DD"),
+        })
+
+        setLoadDataTrue(true);
+
+        setTimeout(() => {
+          if (pdfRef.current) {
+            pdfRef.current.focus();
+          }
+        }, 500);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.dismiss(toastId);
     }
-    // localStorage.setItem("demoData", JSON.stringify(rs.data.data));
-
-    // const blob = await pdf(<MRAFormIPD {...data} />).toBlob();
-
-    // const url = URL.createObjectURL(blob)
-
-    // window.open(url)
   }
+
+  const hdlShowDelete = () => {
+    setShowModalDelete(true);
+  }
+
+  const memoizedPdf = useMemo(() => {
+    return <PDFViewer ref={pdfRef} key={an} width="100%" height="100%"><MRAFormIPD {...pdfData} /></PDFViewer>;
+  }, [pdfData]);
+
+  const onDeleteFormIPD = async ({ an, password }) => {
+
+    const toastId = toast.loading("ระบบกําลังลบข้อมูล...");
+
+    try {
+      const rs = await axios.delete(`/private/mraIPD/${an}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        data: { password },
+      });
+
+      if (rs.status === 200) {
+        toast.update(toastId,  { 
+          render: rs.data.message,
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
+        hdlResetState();
+        return true; // ✅ สำเร็จ
+      }
+    } catch (err) {
+      toast.update(toastId, {
+        render: err.response?.data?.message || "ลบไม่สำเร็จ",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      console.error(err);
+      return false; // ❌ ไม่สำเร็จ
+    }
+  };
 
   return (
     <>
@@ -645,7 +780,7 @@ export default function FormIPD() {
               borderColor: themeMRA.activeBg,
             }}
             placeholder="Date admitted"
-            value={moment(dataAn?.regdate).add(543, "year").locale("th").format("DD/MM/YYYY") || ""}
+            value={dataAn?.regdate ? moment(dataAn?.regdate).add(543, "year").locale("th").format("DD/MM/YYYY") : ""}
             readOnly
             disabled
           />
@@ -661,7 +796,7 @@ export default function FormIPD() {
               borderColor: themeMRA.activeBg,
             }}
             placeholder="Date discharged"
-            value={moment(dataAn?.dchdate).add(543, "year").locale("th").format("DD/MM/YYYY") || ""}
+            value={dataAn?.dchdate ? moment(dataAn?.dchdate).add(543, "year").locale("th").format("DD/MM/YYYY") : ""}
             readOnly
             disabled
           />
@@ -674,7 +809,7 @@ export default function FormIPD() {
             </p>
 
             {pdfReady && (
-              <button className="border px-6 rounded-full bg-red-200 border-red-600 text-red-600 hover:cursor-pointer focus:outline-0" onMouseUp={(e) => ripple.create(e, "light")}>ลบ</button>
+              <button className="border px-6 rounded-full bg-red-200 border-red-600 text-red-600 hover:cursor-pointer focus:outline-0" onClick={hdlShowDelete} onMouseUp={(e) => ripple.create(e, "light")}>ลบ</button>
             )}
           </div>
         )}
@@ -764,7 +899,7 @@ export default function FormIPD() {
                       }}
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      placeholder="ระบุ"
+                      placeholder="โปรดระบุความคิดเห็น"
                     />
                   )}
               </div>
@@ -781,29 +916,27 @@ export default function FormIPD() {
                 color: themeMRA.textHeaderTable
               }}
               >{output?.review_status_id ? "บันทึก" : "บันทึกฉบับร่าง"}</button>
-              <button 
-                className="border px-10 py-1.5 rounded-full font-semibold hover:cursor-pointer" 
-                type="button"
-                onMouseUp={ (e) => ripple.create(e, "light") }
-                onClick={hdlPreviewSubmit}
-                style={{
-                  backgroundColor: themeMRA.headerTableBg,
-                  color: themeMRA.textHeaderTable
-              }}>Preview</button>
           </div>
         </div>
       )}
 
+      <ConfirmDeleteModal
+        showModalDelete={showModalDelete}
+        setShowModalDelete={setShowModalDelete}
+        data={pdfData}
+        onConfirmDelete={async ({ password, originalAn }) => {
+          return await onDeleteFormIPD({ an: originalAn, password });
+        }}
+      />
+
       {pdfReady && (
         <div className="w-full h-dvh overflow-hidden rounded-md">
-          <PDFViewer ref={pdfRef} width="100%" height="100%">
-            <MRAFormIPD {...pdfData} />
-          </PDFViewer>
+          {pdfData && memoizedPdf}
         </div>      
       )}
 
     </div>
-
+  
     </>
   );
 }

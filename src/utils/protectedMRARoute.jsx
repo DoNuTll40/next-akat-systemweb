@@ -3,10 +3,10 @@
 import AuthHook from "@/hooks/AuthHook";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import LoadingPage from "./loading";
-import Forbidden from "./forbidden";
+import LoadingPage from "../app/loading";
+import Forbidden from "../app/forbidden";
 
-export default function ProtectedAdminRoute({ children }) {
+export default function ProtectedMRARoute({ children }) {
   const { user, loading } = AuthHook();
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);

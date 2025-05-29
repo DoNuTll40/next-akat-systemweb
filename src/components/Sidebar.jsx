@@ -74,6 +74,21 @@ export default function SideBar() {
       title: "หน้าแรก",
     },
     {
+      icon: <CalendarClock size={22} strokeWidth={1} />,
+      name: "รายการลงเวลา",
+      path: "/user/attendance",
+      title: "แดชบอร์ด",
+      submenu: [
+        { name: "ข้อมูลลงเวลา เข้า-ออก", path: "/user/attendance/attendance-record" },
+      ],
+      department: [
+        { department_id: 12 },
+        { department_id: 15 }
+      ],
+      lock: <Lock size={15} strokeWidth={1} />,
+      unLock: <LockOpen size={15} strokeWidth={1} />,
+    },
+    {
       icon: <BookText size={22} strokeWidth={1} />,
       name: "Medical Record Audit",
       path: "/mra",
@@ -169,12 +184,15 @@ export default function SideBar() {
                       <span>{item.icon}</span>
                       <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
                     </div>
-                    <ChevronDown
-                      className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
-                      size={16}
-                      strokeWidth={1}
-                    />
-                    {item.status && user?.status !== item.status ? item.lock : item.unLock}
+                    <div className="flex gap-2">
+                      {console.log(item.department?.some(dep => dep.department_id === user?.departments?.department_id))}
+                      {user?.status !== item.status ? item.department?.some(dep => dep.department_id === user?.departments?.department_id) ? item.unLock : item.lock : item.unLock}
+                      <ChevronDown
+                        className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
+                        size={16}
+                        strokeWidth={1}
+                      />
+                    </div>
                   </button>
                 ) : (
                   <Link
@@ -187,7 +205,7 @@ export default function SideBar() {
                       <span>{item.icon}</span>
                       <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
                     </div>
-                    {item.status && user?.status !== item.status ? item.lock : item.unLock}
+                    {user?.status !== item.status ? item.lock : item.unLock}
                   </Link>
                 )}
 

@@ -45,7 +45,7 @@ export default function Header() {
     if (key === "1") {
       setShowThemeModal(true);
     } else if (key === "2") {
-      router.push("/admin");
+      router.push(`/${user?.status.toLowerCase()}`);
     }
   };
 

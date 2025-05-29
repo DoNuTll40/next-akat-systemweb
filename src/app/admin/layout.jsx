@@ -4,7 +4,6 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
-import ProtectedAdminRoute from "../protectedAdminRoute";
 import { IdleTimerProvider } from "react-idle-timer";
 import AuthHook from "@/hooks/AuthHook.mjs";
 import { toast } from "react-toastify";
@@ -13,6 +12,7 @@ import { useEffect, useState } from "react";
 import ProfileModal from "@/components/modals/ProfileModal";
 import AppHook from "@/hooks/AppHook.mjs";
 import SlideAlert from "@/components/SlideAlert";
+import ProtectedAdminRoute from "@/utils/protectedAdminRoute";
 
 export default function Layout({ children }) {
   const { showModalProfile } = AppHook();

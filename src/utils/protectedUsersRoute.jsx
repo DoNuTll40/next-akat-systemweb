@@ -1,10 +1,10 @@
 "use client";
 
+import Forbidden from "@/app/forbidden";
+import LoadingPage from "@/app/loading";
 import AuthHook from "@/hooks/AuthHook";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import LoadingPage from "./loading";
-import Forbidden from "./forbidden";
 
 export default function ProtectedUsersRoute({ children }) {
   const { user, loading } = AuthHook();

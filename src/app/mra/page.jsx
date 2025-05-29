@@ -5,6 +5,6 @@ export const metadata = {
 
 export default function page() {
   return (
-    <div>page</div>
+    <div className="bg-white w-full h-[99%] rounded-lg flex justify-center items-center">ระบบอยู่ในช่วงพัฒนา</div>
   )
 }

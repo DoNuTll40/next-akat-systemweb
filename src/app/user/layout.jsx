@@ -9,12 +9,16 @@ import AppHook from "@/hooks/AppHook.mjs";
 import AuthHook from "@/hooks/AuthHook.mjs";
 import { IdleTimerProvider } from "react-idle-timer";
 import { toast } from "react-toastify";
-import ProtectedUsersRoute from "../protectedUsersRoute";
 import SlideAlert from "@/components/SlideAlert";
+import ProtectedUsersRoute from "@/utils/protectedUsersRoute";
+import ProtectedAttendancePage from "@/utils/protectedAttendacePage";
+import { usePathname } from "next/navigation";
 
 export default function Layout({ children }) {
   const { showModalProfile } = AppHook();
   const { logout, setErrMsg, user } = AuthHook();
+
+  const pathname = usePathname();
 
   const hdlIdle = () => {
     logout();
@@ -43,7 +47,7 @@ export default function Layout({ children }) {
             <div className="flex flex-col flex-grow overflow-hidden">
               <div className="flex-grow overflow-y-auto p-4 pt-14 relative max-w-full bg-gray-300">
                 <SlideAlert />
-                {children}
+                {children}  
               </div>
               <Footer className="flex-shrink-0" />
             </div>

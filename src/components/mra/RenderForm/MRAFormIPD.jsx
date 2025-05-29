@@ -141,7 +141,7 @@ export default function MRAFormIPD({ patients, form_ipd_content_of_medical_recor
                     <Svg width="10" height="10" viewBox="0 0 24 24">
                       <Path
                         d="M18 6L6 18M6 6l12 12"
-                        stroke="#ec028d"
+                        stroke="#000000"
                         strokeWidth="2"
                         strokeLinecap="round"
                       />
@@ -154,7 +154,7 @@ export default function MRAFormIPD({ patients, form_ipd_content_of_medical_recor
                     <Svg width="10" height="10" viewBox="0 0 24 24">
                       <Path
                         d="M18 6L6 18M6 6l12 12"
-                        stroke="#ec028d"
+                        stroke="#000000"
                         strokeWidth="2"
                         strokeLinecap="round"
                       />
@@ -167,7 +167,7 @@ export default function MRAFormIPD({ patients, form_ipd_content_of_medical_recor
                     <Svg width="10" height="10" viewBox="0 0 24 24">
                       <Path
                         d="M18 6L6 18M6 6l12 12"
-                        stroke="#ec028d"
+                        stroke="#000000"
                         strokeWidth="2"
                         strokeLinecap="round"
                       />
@@ -215,7 +215,7 @@ export default function MRAFormIPD({ patients, form_ipd_content_of_medical_recor
           </Text>
 
           <Text style={[tw("text-lg absolute"), { top: 3, left: 720, lineHeight: 0.9 }]}>
-            {formattedResultSum}
+            {formattedResultSum || 0}
           </Text>
         </View>
 
