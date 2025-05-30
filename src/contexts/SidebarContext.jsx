@@ -7,6 +7,7 @@ export const SidebarContext = createContext();
 function SidebarContextProvider({ children }) {
     const [isOpen, setIsOpen] = useState(true); // สถานะเปิด/ปิด
     const [isMini, setIsMini] = useState(false); // สถานะขนาดย่อ
+    const [openHamburger, setOpenHamburger] = useState(false);
   
     // ฟังก์ชันเปิด/ปิด Sidebar
     const toggleSidebar = () => {
@@ -21,21 +22,26 @@ function SidebarContextProvider({ children }) {
       setIsMini(newIsMini);
       localStorage.setItem("miniBar", newIsMini);
     };
+
+    const toggleHamburger = () => {
+      setOpenHamburger((prev) => !prev);
+    };
   
     // โหลดสถานะจาก localStorage เมื่อ component ถูก mount
     useEffect(() => {
       const savedMiniBar = localStorage.getItem("miniBar");
       const savedFullBar = localStorage.getItem("fullBar");
+      const savedHamburger = localStorage.getItem("hamburger");
   
       if (savedMiniBar !== null) {
         setIsMini(savedMiniBar === "true");
       }
       if (savedFullBar !== null) {
         setIsOpen(savedFullBar === "true");
-      }
+      } 
     }, []);
   
-    const value = { isOpen, isMini, toggleSidebar, toggleMini };
+    const value = { isOpen, isMini, toggleSidebar, toggleMini, openHamburger, toggleHamburger };
 
     return (
         <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>

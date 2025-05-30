@@ -37,7 +37,7 @@ export default function Layout({ children }) {
 
   return (
     <ProtectedUsersRoute>
-      <IdleTimerProvider timeout={30 * 60 * 1000} onIdle={hdlIdle}>
+      <IdleTimerProvider timeout={process.env.NEXT_PUBLIC_IDLE_TIMEOUT * 60 * 1000} onIdle={hdlIdle}>
         <div className="h-screen flex flex-col bg-gray-300">
           {!user?.signature_status && <SignaturePadModal />}
           {showModalProfile && <ProfileModal />}

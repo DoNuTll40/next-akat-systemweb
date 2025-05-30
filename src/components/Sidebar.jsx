@@ -7,10 +7,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
+import Footer from "./Footer";
 
 export default function SideBar() {
   const { user } = AuthHook();
-  const { isOpen, isMini, toggleMini } = SideHook();
+  const { isOpen, isMini, toggleMini, openHamburger, toggleHamburger } = SideHook();
   const [onHover, setOnHover] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(null); // ใช้เพื่อตรวจสอบเมนูย่อยที่เปิดอยู่
   const [role, setRole] = useState(null);
@@ -160,97 +161,186 @@ export default function SideBar() {
   const isActive = (item) => item.path === activeMenu.path;
 
   return (
-    <div
-      className={`${isOpen ? (isMini ? `min-w-14 max-w-14 ${onHover ? "min-w-65 max-w-65" : ""}` : "min-w-65 max-w-65") : "min-w-0"} bg-white dark:bg-gray-800 dark:text-white hidden md:flex justify-between flex-col text-sm top-0 h-full left-0 transition-all duration-200 ease-in-out overflow-hidden`}
-      onMouseEnter={() => setOnHover(true)}
-      onMouseLeave={() => setOnHover(false)}
-    >
-      {isOpen && (
-        <div className="pt-0 ml-1 h-fit overflow-hidden flex flex-col w-64 select-none">
-          <div className={`bg-white rounded-md ${isMini && !onHover ? "max-w-[18%]" : ""}`}></div>
-          <div className="my-2 mb-0.5 flex flex-col gap-1.5 overflow-auto sidebar">
-            {(role?.toLowerCase() === "admin" ? adminSideBar : userSideBar).map((item, index) => (
-              <div key={index}>
-                {item.submenu && item.submenu.length > 0 ? (
-                  <button
-                    className={`flex w-full justify-between items-center gap-2 p-2 pl-3 rounded-l-full transition hover:cursor-pointer
-                      ${isActive(item) && !onHover && isMini ? "bg-gray-300" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleSubmenuToggle(index);
-                    }}
-                  >
-                    <div className="flex gap-1.5">
-                      <span>{item.icon}</span>
-                      <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      {console.log(item.department?.some(dep => dep.department_id === user?.departments?.department_id))}
-                      {user?.status !== item.status ? item.department?.some(dep => dep.department_id === user?.departments?.department_id) ? item.unLock : item.lock : item.unLock}
-                      <ChevronDown
-                        className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
-                        size={16}
-                        strokeWidth={1}
-                      />
-                    </div>
-                  </button>
-                ) : (
-                  <Link
-                    href={item.path} // ลบการเช็ค submenu ออก เพราะถ้าไม่มี submenu ให้ไป path ตรงๆ
-                    prefetch={false}
-                    className={`flex justify-between items-center gap-2 p-2 pl-3 rounded-l-full transition 
-                    ${isActive(item) ? "bg-gray-300" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
-                  >
-                    <div className="flex gap-1.5" key={index}>
-                      <span>{item.icon}</span>
-                      <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
-                    </div>
-                    {user?.status !== item.status ? item.lock : item.unLock}
-                  </Link>
-                )}
-
-                {/* render submenu */}
-                {item.submenu && submenuOpen === index && (!isMini || onHover) && (
-                  <div className="pl-4 shadow-inner shadow-gray-200 rounded-tl-2xl">
-                    {Object.entries(item.submenu.reduce((acc, sub) => {
-                      const group = sub.group || "null";
-                      (acc[group] = acc[group] || []).push(sub);
-                      return acc;
-                    }, {})).map(([group, subs], gi) => (
-                      <div key={gi} className="my-0.5">
-                        {group !== "null" && <div className={`${gi === 0 && "pt-3" } text-sm font-semibold select-none text-gray-500 mt-1`}>{group}</div>}
-                        {subs.map((sub, si) => (
-                          <Link
-                            key={si}
-                            href={sub.path}
-                            prefetch={false}
-                            className={`flex p-2 pl-4 my-0.5 rounded-l-full transition ${pathname === sub.path ? "bg-gray-300" : "hover:bg-gray-200"}`}
-                          >
-                            - {sub.name}
-                          </Link>
-                        ))}
+    <>    
+      <div
+        className={`${isOpen ? (isMini ? `min-w-14 max-w-14 ${onHover ? "min-w-65 max-w-65" : ""}` : "min-w-65 max-w-65") : "min-w-0"} bg-white dark:bg-gray-800 dark:text-white hidden md:flex justify-between flex-col text-sm top-0 h-full left-0 transition-all duration-200 ease-in-out overflow-hidden`}
+        onMouseEnter={() => setOnHover(true)}
+        onMouseLeave={() => setOnHover(false)}
+      >
+        {isOpen && (
+          <div className="pt-0 ml-1 h-fit overflow-hidden flex flex-col w-64 select-none">
+            <div className={`bg-white rounded-md ${isMini && !onHover ? "max-w-[18%]" : ""}`}></div>
+            <div className="my-2 mb-0.5 flex flex-col gap-1.5 overflow-auto sidebar">
+              {(role?.toLowerCase() === "admin" ? adminSideBar : userSideBar).map((item, index) => (
+                <div key={index}>
+                  {item.submenu && item.submenu.length > 0 ? (
+                    <button
+                      className={`flex w-full justify-between items-center gap-2 p-2 pl-3 rounded-l-full transition hover:cursor-pointer
+                        ${isActive(item) && !onHover && isMini ? "bg-gray-300" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSubmenuToggle(index);
+                      }}
+                    >
+                      <div className="flex gap-1.5">
+                        <span>{item.icon}</span>
+                        <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
                       </div>
-                    ))}
-                  </div>
-                )}
-                {/* สิ้นสุดของการแสดง menu */}
+                      <div className="flex gap-2">
+                        {user?.status !== item.status ? item.department?.some(dep => dep.department_id === user?.departments?.department_id) ? item.unLock : item.lock : item.unLock}
+                        <ChevronDown
+                          className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
+                          size={16}
+                          strokeWidth={1}
+                        />
+                      </div>
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.path} // ลบการเช็ค submenu ออก เพราะถ้าไม่มี submenu ให้ไป path ตรงๆ
+                      prefetch={false}
+                      className={`flex justify-between items-center gap-2 p-2 pl-3 rounded-l-full transition 
+                      ${isActive(item) ? "bg-gray-300" : "hover:bg-gray-200 dark:hover:bg-gray-700"}`}
+                    >
+                      <div className="flex gap-1.5" key={index}>
+                        <span>{item.icon}</span>
+                        <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
+                      </div>
+                      {user?.status !== item.status ? item.lock : item.unLock}
+                    </Link>
+                  )}
 
-              </div>
-            ))}
+                  {/* render submenu */}
+                  {item.submenu && submenuOpen === index && (!isMini || onHover) && (
+                    <div className="pl-4 shadow-inner shadow-gray-200 rounded-tl-2xl">
+                      {Object.entries(item.submenu.reduce((acc, sub) => {
+                        const group = sub.group || "null";
+                        (acc[group] = acc[group] || []).push(sub);
+                        return acc;
+                      }, {})).map(([group, subs], gi) => (
+                        <div key={gi} className="my-0.5">
+                          {group !== "null" && <div className={`${gi === 0 && "pt-3" } text-sm font-semibold select-none text-gray-500 mt-1`}>{group}</div>}
+                          {subs.map((sub, si) => (
+                            <Link
+                              key={si}
+                              href={sub.path}
+                              prefetch={false}
+                              className={`flex p-2 pl-4 my-0.5 rounded-l-full transition ${pathname === sub.path ? "bg-gray-300" : "hover:bg-gray-200"}`}
+                            >
+                              - {sub.name}
+                            </Link>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {/* สิ้นสุดของการแสดง menu */}
+
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {isOpen && (
-        <div
-          className={`w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 hover:cursor-pointer min-h-8 flex ${isMini ? (onHover ? `justify-end` : `justify-center`) : "justify-end"}`}
-          onClick={toggleMini}
-        >
-          <button className="dark:text-white px-2 hover:cursor-pointer focus:outline-0" aria-label={isMini ? "Expand sidebar" : "Collapse sidebar"}>
-            <ChevronRight size={16} className={`${isMini ? " rotate-0 " : " rotate-180 "} transition-all transform ease-in-out duration-500`} />
-          </button>
-        </div>
-      )}
-    </div>
+        {isOpen && (
+          <div
+            className={`w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 hover:cursor-pointer min-h-8 flex ${isMini ? (onHover ? `justify-end` : `justify-center`) : "justify-end"}`}
+            onClick={toggleMini}
+          >
+            <button className="dark:text-white px-2 hover:cursor-pointer focus:outline-0" aria-label={isMini ? "Expand sidebar" : "Collapse sidebar"}>
+              <ChevronRight size={16} className={`${isMini ? " rotate-0 " : " rotate-180 "} transition-all transform ease-in-out duration-500`} />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* SideBar Mobile */}
+      <div className={`${openHamburger ? "min-w-dvw" : "min-w-0"} bg-gray-300/70 backdrop-blur-sm fixed dark:bg-gray-800 h-[calc(100vh-51px)] dark:text-white flex md:hidden flex-col justify-between text-sm top-[3.2rem] left-0 transition-all duration-200 ease-in-out overflow-hidden z-50`}>
+        {openHamburger && (
+          <div className="p-2 h-fit overflow-hidden animate-fadeIn flex flex-col select-none w-full">
+            <div className={`bg-white rounded-md ${isMini && !onHover ? "max-w-[18%]" : ""}`}></div>
+            <div className="my-2 mb-0.5 flex flex-col gap-1.5 overflow-auto sidebar">
+              {(role?.toLowerCase() === "admin" ? adminSideBar : userSideBar).map((item, index) => (
+                <div key={index}>
+                  {item.submenu && item.submenu.length > 0 ? (
+                    <button
+                      className={`flex w-full justify-between items-center gap-2 p-2 pl-3 rounded-full transition hover:cursor-pointer
+                        ${isActive(item) && !onHover && isMini ? "bg-gray-300" : "hover:bg-gray-100"}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSubmenuToggle(index);
+                      }}
+                    >
+                      <div className="flex gap-1.5">
+                        <span>{item.icon}</span>
+                        <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        {user?.status !== item.status ? item.department?.some(dep => dep.department_id === user?.departments?.department_id) ? item.unLock : item.lock : item.unLock}
+                        <ChevronDown
+                          className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
+                          size={16}
+                          strokeWidth={1}
+                        />
+                      </div>
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.path} // ลบการเช็ค submenu ออก เพราะถ้าไม่มี submenu ให้ไป path ตรงๆ
+                      prefetch={false}
+                      onClick={toggleHamburger}
+                      className={`flex justify-between items-center gap-2 p-2 pl-3 rounded-full drop-shadow-sm transition 
+                      ${isActive(item) ? "bg-white" : "hover:bg-gray-100"}`}
+                    >
+                      <div className="flex gap-1.5" key={index}>
+                        <span>{item.icon}</span>
+                        <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
+                      </div>
+                      {user?.status !== item.status ? item.lock : item.unLock}
+                    </Link>
+                  )}
+
+                  {/* render submenu */}
+                  {item.submenu && submenuOpen === index && (!isMini || onHover) && (
+                    <div className="border-t border-gray-50 mt-1">
+                      {Object.entries(item.submenu.reduce((acc, sub) => {
+                        const group = sub.group || "null";
+                        (acc[group] = acc[group] || []).push(sub);
+                        return acc;
+                      }, {})).map(([group, subs], gi) => (
+                        <div key={gi} className="my-0.5">
+                          {group !== "null" && <div className={`${gi === 0 && "pt-1" } text-center text-sm font-semibold select-none text-gray-900 my-2`}>{group}</div>}
+                          {subs.map((sub, si) => (
+                            <Link
+                              key={si}
+                              onClick={toggleHamburger}
+                              href={sub.path}
+                              prefetch={false}
+                              className={`flex p-2 pl-4 my-1 rounded-full drop-shadow-sm transition border-white border bg-white/60 ${pathname === sub.path ? "bg-white" : "hover:bg-gray-100"}`}
+                            >
+                              - {sub.name}
+                            </Link>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {/* สิ้นสุดของการแสดง menu */}
+
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {openHamburger && (
+          <div
+            className={`w-full bg-gray-300 text-xs flex items-center justify-center min-h-8`}
+          >
+            <p className="line-clamp-1">โรงพยาบาลอากาศอำนวย</p>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

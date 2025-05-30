@@ -12,14 +12,11 @@ import Footer from "@/components/mra/Footer";
 import SideBar from "@/components/mra/Sidebar";
 import { MRAThemeContextProvider } from "@/contexts/theme/MRAThemeContext";
 import { GpsContextProvider } from "@/contexts/GpsContext";
-import GpsHook from "@/hooks/GpsHook.mjs";
 import ProtectedMRARoute from "@/utils/protectedMRARoute";
 
 export default function Layout({ children }) {
   const { showModalProfile } = AppHook();
   const { logout, setErrMsg, user } = AuthHook();
-
-  const { currentPosition: currentPosition, error, loading, locationStatus, isFromTrustedNetwork } = GpsHook();
 
   const hdlIdle = () => {
     logout();
@@ -36,19 +33,17 @@ export default function Layout({ children }) {
     );
   };
 
-  console.log(currentPosition, error, loading, locationStatus, isFromTrustedNetwork);
-
   return (
     <ProtectedMRARoute>
       <MRAThemeContextProvider>
-        <IdleTimerProvider timeout={30 * 60 * 1000} onIdle={hdlIdle}>
+        <IdleTimerProvider timeout={process.env.NEXT_PUBLIC_IDLE_TIMEOUT * 60 * 1000} onIdle={hdlIdle}>
           <GpsContextProvider>
             <div className="h-screen flex flex-col bg-gray-300">
               {!user?.signature_status && <SignaturePadModal />}
               {showModalProfile && <ProfileModal />}
               <Header className="flex-shrink-0" />
               <div className="flex flex-grow overflow-hidden">
-                <SideBar className="flex-shrink-0 w-64" />
+                <SideBar className="flex-shrink-0 w-full md:w-64" />
                 <div className="flex flex-col flex-grow overflow-hidden">
                   <div className="flex-grow overflow-y-auto p-4 pt-14 relative max-w-full bg-gray-300">
                     <SlideAlert />

@@ -5,13 +5,13 @@ import AuthHook from "@/hooks/AuthHook.mjs";
 import SideHook from "@/hooks/SideHook.mjs";
 import { Avatar, Dropdown } from "antd";
 import axios from "axios";
-import { AlignJustify, AlignLeft, IdCard, LogOut, PanelLeft, PanelLeftClose } from "lucide-react";
+import { AlignJustify, AlignLeft, IdCard, LogOut, Menu, PanelLeft, PanelLeftClose, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Header() {
   const { setShowModalProfile } = AppHook();
   const { logout, user } = AuthHook();
-  const { isOpen, toggleSidebar } = SideHook();
+  const { isOpen, toggleSidebar, toggleHamburger, openHamburger } = SideHook();
   const [profileImage, setProfileImage] = useState(null)
 
   const items = [
@@ -67,7 +67,8 @@ export default function Header() {
   return (
     <div className="border-b border-gray-300 py-2 bg-white select-none">
         <div className="flex justify-between items-center mx-auto h-9 px-2">
-            <div className="font-semibold text-md flex items-center gap-0.5">
+          
+            <div className="font-semibold text-md hidden md:flex items-center gap-0.5">
               <button 
                 onClick={toggleSidebar}
                 className="p-4 rounded-lg hover:cursor-pointer"
@@ -79,6 +80,18 @@ export default function Header() {
                   )}
               </button>
                 <p>{ user?.status === "ADMIN" ? "ผู้ดูแลระบบ" : "ผู้ใช้งาน"}</p>
+            </div>
+
+            <div className="font-semibold text-md flex md:hidden items-center gap-0.5">
+              <button 
+                onClick={toggleHamburger}
+                className="p-4 rounded-lg hover:cursor-pointer flex justify-center items-center"
+              >
+                <span className={`block absolute h-0.5 w-5 rounded-full bg-current transform transition-all duration-500 ease-in-out ${openHamburger ? "rotate-45" : "-translate-y-1.5"}`}></span>
+                <span className={`block absolute h-0.5 w-5 rounded-full bg-current transform transition-all duration-500 ease-in-out ${openHamburger ? "w-[0px] -translate-x-5 opacity-0" : ""}`}></span>
+                <span className={`block absolute h-0.5 w-5 rounded-full bg-current transform transition-all duration-500 ease-in-out ${openHamburger ? "-rotate-45" : "translate-y-1.5"}`}></span>
+              </button>
+              <p>{ user?.status === "ADMIN" ? "ผู้ดูแลระบบ" : "ผู้ใช้งาน"}</p>
             </div>
             <div>
             <Dropdown
