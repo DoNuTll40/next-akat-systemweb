@@ -56,7 +56,8 @@ export default function SideBar() {
       submenu: [
         { name: "ข้อมูลชื่อสถานะเข้างาน", path: "/admin/settings/checkin", group: "ระบบลงเวลา" },
         { name: "ข้อมูลชื่อสถานะออกงาน", path: "/admin/settings/checkout", group: "ระบบลงเวลา" },
-        { name: "บันทึกการเช้างาน", path: "/admin/settings/shift", group: "ระบบลงเวลา" },
+        { name: "เวลาเข้างาน", path: "/admin/settings/shift", group: "ระบบลงเวลา" },
+        { name: "ประเภทวันเข้างาน", path: "/admin/settings/shift-type", group: "ระบบลงเวลา" },
         { name: "ข้อมูลวันหยุด", path: "/admin/settings/holiday", group: "ระบบลงเวลา" },
         { name: "ข้อมูลเวอร์ชั่น API", path: "/admin/settings/api-version", group: "เวอร์ชั่น" },
         { name: "ข้อมูลรายละเอียด API", path: "/admin/settings/api-details", group: "เวอร์ชั่น" },
@@ -258,14 +259,14 @@ export default function SideBar() {
       <div className={`${openHamburger ? "min-w-dvw" : "min-w-0"} bg-gray-300/70 backdrop-blur-sm fixed dark:bg-gray-800 h-[calc(100vh-51px)] dark:text-white flex md:hidden flex-col justify-between text-sm top-[3.2rem] left-0 transition-all duration-200 ease-in-out overflow-hidden z-50`}>
         {openHamburger && (
           <div className="p-2 h-fit overflow-hidden animate-fadeIn flex flex-col select-none w-full">
-            <div className={`bg-white rounded-md ${isMini && !onHover ? "max-w-[18%]" : ""}`}></div>
+            <div className={`bg-white rounded-md max-w-[18%]`}></div>
             <div className="my-2 mb-0.5 flex flex-col gap-1.5 overflow-auto sidebar">
               {(role?.toLowerCase() === "admin" ? adminSideBar : userSideBar).map((item, index) => (
                 <div key={index}>
                   {item.submenu && item.submenu.length > 0 ? (
                     <button
                       className={`flex w-full justify-between items-center gap-2 p-2 pl-3 rounded-full transition hover:cursor-pointer
-                        ${isActive(item) && !onHover && isMini ? "bg-gray-300" : "hover:bg-gray-100"}`}
+                        ${isActive(item) ? "bg-gray-300" : "hover:bg-gray-100"}`}
                       onClick={(e) => {
                         e.preventDefault();
                         handleSubmenuToggle(index);
@@ -273,7 +274,7 @@ export default function SideBar() {
                     >
                       <div className="flex gap-1.5">
                         <span>{item.icon}</span>
-                        <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
+                        <span>{item.name}</span>
                       </div>
                       <div className="flex gap-2">
                         {user?.status !== item.status ? item.department?.some(dep => dep.department_id === user?.departments?.department_id) ? item.unLock : item.lock : item.unLock}
@@ -294,14 +295,14 @@ export default function SideBar() {
                     >
                       <div className="flex gap-1.5" key={index}>
                         <span>{item.icon}</span>
-                        <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
+                        <span>{item.name}</span>
                       </div>
                       {user?.status !== item.status ? item.lock : item.unLock}
                     </Link>
                   )}
 
                   {/* render submenu */}
-                  {item.submenu && submenuOpen === index && (!isMini || onHover) && (
+                  {item.submenu && submenuOpen === index && (
                     <div className="border-t border-gray-50 mt-1">
                       {Object.entries(item.submenu.reduce((acc, sub) => {
                         const group = sub.group || "null";

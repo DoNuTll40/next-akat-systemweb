@@ -45,7 +45,7 @@ export default function FormShowCase() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-6 py-2 sm:p-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-6 py-2 sm:p-4">
         {data &&
           Object.entries(data).map(([key, value]) => (
             <div

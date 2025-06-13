@@ -308,7 +308,7 @@ export default function MRASidebar() {
       >
         {openHamburger && (
           <div className="pt-0 ml-1 h-fit overflow-hidden flex flex-col w-full select-none">
-            <div className={`rounded-md ${isMini && !onHover ? "max-w-[18%]" : ""}`}></div>
+            <div className={`rounded-md max-w-[18%]`}></div>
             <div className="my-2 mb-0.5 flex flex-col gap-1.5 overflow-auto sidebar">
               {sideMRA.map((item, index) => (
                 <div key={index}>
@@ -339,7 +339,7 @@ export default function MRASidebar() {
                     >
                       <div className="flex gap-1.5">
                         <span>{item.icon}</span>
-                        <span className={`${isMini && !onHover && "hidden"}`}>
+                        <span>
                           {item.name}
                         </span>
                       </div>
@@ -377,7 +377,7 @@ export default function MRASidebar() {
                     >
                       <div className="flex gap-1.5">
                         <span>{item.icon}</span>
-                        <span className={`${isMini && !onHover && "hidden"}`}>
+                        <span>
                           {item.name}
                         </span>
                       </div>
@@ -385,8 +385,7 @@ export default function MRASidebar() {
                   )}
 
                   {item.submenu &&
-                    submenuOpen === index &&
-                    (!isMini || onHover) && (
+                    submenuOpen === index && (
                       <div className="border-t my-1">
                         {Object.entries(
                           item.submenu.reduce((acc, sub) => {

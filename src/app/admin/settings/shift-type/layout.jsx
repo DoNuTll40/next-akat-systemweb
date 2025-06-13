@@ -1,6 +1,6 @@
 
 export const metadata = {
-    title: "ข้อมูลสถานะเวลาวันเข้างาน"
+    title: "ข้อมูลสถานะประเภทวันเข้างาน"
 }
 
 export default function layout({children}) {

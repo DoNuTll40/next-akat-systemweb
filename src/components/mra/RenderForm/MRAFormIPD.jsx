@@ -41,8 +41,8 @@ export default function MRAFormIPD({ patients, form_ipd_content_of_medical_recor
       >
       <Page size="A4" orientation="landscape" style={[tw("p-8 pt-5 font-sans text-base"), { lineHeight: 1 }]} textLayer={false}>
         <Image 
-          src="/hospital/images/nhso-logo-pink.png" 
-          style={tw("w-32 h-auto mt-4 mx-auto")} 
+          src="/hospital/images/logo-nhso-go-th-vector.png" 
+          style={tw("w-32 h-auto mt-2 mx-auto")} 
         />
         <Text style={[tw("text-center font-bold text-[#ec028d] text-xl my-0.5"), { lineHeight: 1 }]}>แบบตรวจประเมินคุณภำพกำรบันทึกเวชระเบียนผู้ป่วยใน Medical Record Audit Form (IPD)</Text>
 

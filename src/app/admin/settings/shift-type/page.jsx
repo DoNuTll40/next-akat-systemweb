@@ -23,7 +23,7 @@ export default function page() {
     let token = localStorage.getItem("token");
 
     try {
-      const rs = await axios.get("/setting/getShifts", {
+      const rs = await axios.get("/setting/getShiftTypes", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,14 +43,8 @@ export default function page() {
 
     try {
       const rs = await axios.post(
-        "/setting/insertShift",
-        {
-          shift_name: formData.shift_name,
-          shift_starting: formData.shift_starting, 
-          shift_late: formData.shift_late, 
-          shift_ending: formData.shift_ending, 
-          shift_early: formData.shift_early 
-        },
+        "/setting/insertShiftType",
+        { shift_type_name: formData.shift_type_name },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -63,7 +57,7 @@ export default function page() {
         fetchApi();
       }
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error("ไม่สามารถสร้างข้อมูลได้ กรุณาลองใหม่");
     }
   };
 
@@ -73,14 +67,8 @@ export default function page() {
 
     try {
       const rs = await axios.put(
-        `/setting/updateShift/${selectedRecord.index}`,
-        {
-          shift_name: formData.shift_name,
-          shift_starting: formData.shift_starting, 
-          shift_late: formData.shift_late, 
-          shift_ending: formData.shift_ending, 
-          shift_early: formData.shift_early 
-        },
+        `/setting/updateShiftType/${selectedRecord.index}`,
+        { shift_type_name: formData.shift_type_name },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +81,7 @@ export default function page() {
         fetchApi();
       }
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error("ไม่สามารถแก้ไขข้อมูลได้ กรุณาลองใหม่");
     }
   };
 
@@ -103,7 +91,7 @@ export default function page() {
 
     try {
       const rs = await axios.delete(
-        `/setting/removeShift/${record.index}`,
+        `/setting/removeShiftType/${record.index}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -116,7 +104,7 @@ export default function page() {
         fetchApi();
       }
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error("ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่");
     }
   };
 
@@ -157,38 +145,10 @@ export default function page() {
       width: "5rem",
     },
     {
-      title: "ช่วงเวลา",
-      dataIndex: "shift_name",
+      title: "ชื่อสถานะ",
+      dataIndex: "shift_type_name",
       sorter: (a, b) =>
-        a.shift_name.localeCompare(b.shift_name),
-      ellipsis: true,
-    },
-    {
-      title: "เวลาเริ่มเข้างาน",
-      dataIndex: "shift_starting",
-      sorter: (a, b) =>
-        a.shift_starting.localeCompare(b.shift_starting),
-      ellipsis: true,
-    },
-    {
-      title: "เวลาเข้างานสาย",
-      dataIndex: "shift_late",
-      sorter: (a, b) =>
-        a.shift_late.localeCompare(b.shift_late),
-      ellipsis: true,
-    },
-    {
-      title: "เวลาออกงาน",
-      dataIndex: "shift_ending",
-      sorter: (a, b) =>
-        a.shift_ending.localeCompare(b.shift_ending),
-      ellipsis: true,
-    },
-    {
-      title: "เวลาออกงานสาย",
-      dataIndex: "shift_early",
-      sorter: (a, b) =>
-        a.เวลาออกงานสาย.localeCompare(b.เวลาออกงานสาย),
+        a.check_in_status_name.localeCompare(b.check_in_status_name),
       ellipsis: true,
     },
     {
@@ -255,7 +215,7 @@ export default function page() {
       <div className="my-2 font-semibold pl-1.5 bg-blue-900 rounded-md shadow-sm">
         <h1 className="bg-blue-50 p-2 pl-3 text-blue-900 flex gap-2 items-center">
           <ListChecks size={20} />
-          ข้อมูลสถานะเวลาวันเข้างาน
+          ข้อมูลสถานะประเภทวันเข้างาน
         </h1>
       </div>
 
@@ -275,21 +235,11 @@ export default function page() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
-        fields={[
-          { name: "shift_name", label: "ชื่อสถานะ" },
-          { name: "shift_starting", label: "เวลาเริ่มเข้างาน" },
-          { name: "shift_late", label: "เวลาเข้างานสาย" },
-          { name: "shift_ending", label: "เวลาออกงาน" },
-          { name: "shift_early", label: "เวลาออกงานสาย" },
-        ]}
+        fields={[{ name: "shift_type_name", label: "ชื่อสถานะ" }]}
         initialData={
           modalMode === "edit" && selectedRecord
             ? {
-                shift_name: selectedRecord.shift_name,
-                shift_starting: selectedRecord.shift_starting,
-                shift_late: selectedRecord.shift_late,
-                shift_ending: selectedRecord.shift_ending,
-                shift_early: selectedRecord.shift_early,
+                shift_type_name: selectedRecord.shift_type_name,
               }
             : {}
         }
