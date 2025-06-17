@@ -18,7 +18,7 @@ export default function ProtectedUsersRoute({ children }) {
     if (!loading) {
       if (!user || !user.positions) {
         // redirect ไปหน้า login เมื่อ user ไม่ได้ login
-        router.replace("/admin/auth/login");
+        router.replace("/auth/login");
       }
       // ไม่ต้อง redirect ถ้า user เป็น admin (จะตรวจสอบใน return ข้างล่าง)
     }

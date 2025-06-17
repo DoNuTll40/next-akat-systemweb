@@ -16,7 +16,7 @@ export default function ProtectedAttendancePage({ children }) {
 
     // ถ้าไม่ได้ login
     if (!user || !user.positions) {
-      router.replace("/admin/auth/login");
+      router.replace("/auth/login");
       return;
     }
 

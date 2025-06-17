@@ -58,6 +58,7 @@ export default function SideBar() {
         { name: "ข้อมูลชื่อสถานะออกงาน", path: "/admin/settings/checkout", group: "ระบบลงเวลา" },
         { name: "เวลาเข้างาน", path: "/admin/settings/shift", group: "ระบบลงเวลา" },
         { name: "ประเภทวันเข้างาน", path: "/admin/settings/shift-type", group: "ระบบลงเวลา" },
+        { name: "ตำแหน่งระบบลงเวลา", path: "/admin/settings/locations", group: "ระบบลงเวลา" },
         { name: "ข้อมูลวันหยุด", path: "/admin/settings/holiday", group: "ระบบลงเวลา" },
         { name: "ข้อมูลเวอร์ชั่น API", path: "/admin/settings/api-version", group: "เวอร์ชั่น" },
         { name: "ข้อมูลรายละเอียด API", path: "/admin/settings/api-details", group: "เวอร์ชั่น" },

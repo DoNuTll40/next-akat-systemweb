@@ -2,19 +2,31 @@
 
 import OtpInput from "@/components/OtpInput"
 import SettingSyncModal from "@/components/SettingSyncModal"
+import AuthHook from "@/hooks/AuthHook.mjs"
 import { ServerCog } from "lucide-react"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function layout({children}) {
-
+  const router = useRouter();
   const [showModalSync, setShowModalSync] = useState(false);
 
   const toggleModalSync = () => {
     setShowModalSync(!showModalSync)
   }
 
+  if(localStorage.getItem("isAuthen")){
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.replace("/");
+    }
+
+    return null
+  }
+
   return (
-    <div className="flex justify-center w-full relative top-0 items-center min-h-screen px-4 py-4 bg-[url('https://5.imimg.com/data5/SELLER/Default/2021/8/LR/AP/SW/6976612/hospital-wallpaper.jpg')] bg-center bg-cover relative">
+    <div className="flex justify-center w-full relative top-0 items-center min-h-screen px-4 py-4 bg-[url('https://5.imimg.com/data5/SELLER/Default/2021/8/LR/AP/SW/6976612/hospital-wallpaper.jpg')] bg-center bg-cover">
       <div className="absolute inset-0 bg-black/25 backdrop-blur-xs z-0"></div>
       <OtpInput />
       <div className="w-96 bg-gray-50/85 border border-white backdrop-blur-xl text-black shadow-xl hover:border-black/20 h-fit rounded-2xl p-4 transition-all transform ease-in-out duration-300">
