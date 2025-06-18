@@ -108,6 +108,13 @@ export default function AttendancePage() {
     value: date || 'ไม่มีข้อมูล',
   }));
 
+    // ทำตัวเลือกใน filter จากข้อมูล
+  const uniqueCheckShifts = [...new Set(dataSource.map((item) => item?.shifts?.shift_name)),
+  ].map((date) => ({
+    text: date || 'ไม่มีข้อมูล',
+    value: date || 'ไม่มีข้อมูล',
+  }));
+
   const attendanceSummary = {
     checkIn: uniqueCheckInStatus.reduce((acc, status) => {
       acc[status.value] = dataSource.filter(item => 
@@ -156,6 +163,21 @@ export default function AttendancePage() {
       filters: uniqueCheckInStatus,
       onFilter: (value, record) => record.check_in_status.check_in_status_name === value,
       width: "7rem"
+    },
+    {
+      title: "เวร",
+      dataIndex: "shifts",
+      sorter: (a, b) => a.shifts?.shift_name.localeCompare(b.shifts?.shift_name),
+      ellipsis: true,
+      render: (_, record) => (
+        <div className="w-full h-full flex flex-col gap-1">
+          <p className="text-xs text-white font-bold bg-amber-500 py-0.5 px-2 rounded w-fit">{record?.shifts?.shift_name || "-"}</p>
+          <p className={`text-xs text-white font-bold bg-red-500 py-0.5 px-2 rounded w-fit ${!record?.desc_start && "hidden"}`}>{record?.desc_start && "นอกสถานที่"}</p>
+        </div>
+      ),
+      // filters: uniqueCheckShifts,
+      // onFilter: (value, record) => record.shifts?.shift_name === value,
+      width: "8rem"
     },
     {
       title: "เวลาเข้างาน",
