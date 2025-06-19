@@ -180,6 +180,13 @@ export default function AttendancePage() {
       width: "8rem"
     },
     {
+      title: "หมายเหตุเข้างาน",
+      dataIndex: "desc_start",
+      sorter: (a, b) => a.desc_start.localeCompare(b.desc_start),
+      ellipsis: true,
+      width: "8rem"
+    },
+    {
       title: "เวลาเข้างาน",
       dataIndex: "starting",
       responsive: ["lg"],
@@ -249,6 +256,7 @@ export default function AttendancePage() {
       sorter: (a, b) => a.created_at.localeCompare(b.created_at),
       ellipsis: true,
       responsive: ["lg"],
+      width: "8rem"
     },
     {
       title: "อัพเดทล่าสุด",
@@ -257,6 +265,7 @@ export default function AttendancePage() {
       sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
       ellipsis: true,
       responsive: ["lg"],
+      width: "8rem"
     },
   ];
   // สิ้นสุด
