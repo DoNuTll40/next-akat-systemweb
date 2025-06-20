@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
+import { render } from "@react-pdf/renderer";
 
 dayjs.extend(buddhistEra);
 dayjs.locale(dayTh);
@@ -171,7 +172,19 @@ export default function AttendancePage() {
       ellipsis: true,
       render: (_, record) => (
         <div className="w-full h-full flex flex-col gap-1">
-          <p className="text-xs text-white font-bold bg-amber-500 py-0.5 px-2 rounded w-fit">{record?.shifts?.shift_name || "-"}</p>
+          <div className="flex gap-1">
+            <p className="text-xs text-white font-bold bg-amber-500 py-0.5 px-2 rounded w-fit">{record?.shifts?.shift_name || "-"}</p>
+            <a
+              href={`https://www.google.com/maps?q=${record.location_lat_start},${record.location_lon_start}`}
+              target="_blank"
+              // rel="noopener noreferrer"
+              class
+              className="text-xs text-white font-bold bg-amber-500 py-0.5 px-2 rounded w-fit"
+              hidden={!record?.desc_start}
+            >
+              สถานที่ลงชื่อ
+            </a>
+          </div>
           <p className={`text-xs text-white font-bold bg-red-500 py-0.5 px-2 rounded w-fit ${!record?.desc_start && "hidden"}`}>{record?.desc_start && "นอกสถานที่"}</p>
         </div>
       ),
@@ -184,7 +197,7 @@ export default function AttendancePage() {
       dataIndex: "desc_start",
       sorter: (a, b) => a.desc_start.localeCompare(b.desc_start),
       ellipsis: true,
-      width: "8rem"
+      width: "11rem"
     },
     {
       title: "เวลาเข้างาน",
