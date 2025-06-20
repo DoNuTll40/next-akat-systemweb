@@ -312,6 +312,11 @@ export default function Page() {
           showTotal: (total) => `ทั้งหมด ${total} รายการ`,
         }}
       />
+
+      <div>
+        <a href="https://uat-moph.id.th/oauth/redirect?client_id=cc7caf68-1df5-4e6e-ab51-6902ff3b0608URRovaPpiHITgxSgDbbPOYWHHJu&redirect_uri=http://localhost:3000/hospital/admin/settings/api-details&response_type=code">test</a>
+        <p>123456</p>
+      </div>
     </div>
   );
 }

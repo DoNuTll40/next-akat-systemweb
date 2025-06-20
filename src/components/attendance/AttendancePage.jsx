@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { render } from "@react-pdf/renderer";
+import moment from "moment";
 
 dayjs.extend(buddhistEra);
 dayjs.locale(dayTh);
@@ -415,8 +416,13 @@ export default function AttendancePage() {
   };
 
   const hdlChengeStartDate = (date) => {
+    console.log("default: " +date)
     const [month, day, year] = date.split('/');
     const formattedDate = `${year}-${month}-${day}`;
+    console.log("formattedDate: " +formattedDate)
+    console.log(formattedDate)
+    console.log("moment "+moment())
+    console.log("momentStart " +moment(formattedDate))
     setStartDate(formattedDate)
   }
 
@@ -446,6 +452,10 @@ export default function AttendancePage() {
       toast.error(err.response?.data?.message)
     }
   }
+  
+  console.log(startDate)
+  console.log("moment "+moment())
+  console.log("momentStart " +moment(startDate))
 
   return (
     <div className="bg-white p-4 rounded-xl select-none shadow-md">
@@ -488,7 +498,7 @@ export default function AttendancePage() {
           <DatePicker
             inputReadOnly
             className="w-full border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(date) => hdlChengeStartDate(new Date(date?.$d).toLocaleDateString())}
+            onChange={(date) => {hdlChengeStartDate(date.toDate().toLocaleDateString()), console.log(date.toDate().toLocaleDateString())}}
             locale={buddhistLocale}
             placeholder="เลือกวันที่..."
           />
@@ -499,7 +509,7 @@ export default function AttendancePage() {
             inputReadOnly
             disabled={!startDate}
             disabledDate={(current) => 
-              startDate ? current.isBefore(startDate, "day") : false
+              startDate ? startDate && current.isBefore(moment(startDate)) : false
             }
             className="w-full border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             onChange={(date) => hdlChengeEndDate(new Date(date?.$d).toLocaleDateString())}

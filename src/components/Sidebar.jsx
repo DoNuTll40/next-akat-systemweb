@@ -168,7 +168,6 @@ export default function SideBar() {
   const isActive = (item) => item.path === activeMenu.path;
 
   const hasAccess = (item) => {
-    console.log(item)
     if (item.status && user?.status !== item.status) return false;
     if (item.department && !item.department.some(dep => dep.department_id === user?.departments?.department_id)) return false;
     return true;
@@ -201,7 +200,6 @@ export default function SideBar() {
                         <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
                       </div>
                       <div className="flex gap-2">
-                        {console.log(hasAccess(item))}
                         {hasAccess(item) ? item.unLock : item.lock}
                         <ChevronDown
                           className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
