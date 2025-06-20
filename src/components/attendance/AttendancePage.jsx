@@ -416,21 +416,14 @@ export default function AttendancePage() {
   };
 
   const hdlChengeStartDate = (date) => {
-    console.log("default: " +date)
-    const [month, day, year] = date.split('/');
-    const formattedDate = `${year}-${month}-${day}`;
-    console.log("formattedDate: " +formattedDate)
-    console.log(formattedDate)
-    console.log("moment "+moment())
-    console.log("momentStart " +moment(formattedDate))
-    setStartDate(formattedDate)
-  }
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+    setStartDate(formattedDate);
+  };
 
-  const hdlChengeEndDate = (date) => {  
-    const [month, day, year] = date.split('/');
-    const formattedDate = `${year}-${month}-${day}`;
-    setEndDate(formattedDate)
-  }
+  const hdlChengeEndDate = (date) => {
+    const formattedDate = moment(date).format("YYYY-MM-DD");
+    setEndDate(formattedDate);
+  };
 
   const clickSearchDate = async () => {
     let token = localStorage.getItem("token");
@@ -498,7 +491,7 @@ export default function AttendancePage() {
           <DatePicker
             inputReadOnly
             className="w-full border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(date) => {hdlChengeStartDate(date.toDate().toLocaleDateString()), console.log(date.toDate().toLocaleDateString())}}
+            onChange={(date) => hdlChengeStartDate(date.toDate())}
             locale={buddhistLocale}
             placeholder="เลือกวันที่..."
           />
@@ -509,10 +502,10 @@ export default function AttendancePage() {
             inputReadOnly
             disabled={!startDate}
             disabledDate={(current) => 
-              startDate ? startDate && current.isBefore(moment(startDate)) : false
+              !!startDate && current.isBefore(moment(startDate), "day")
             }
             className="w-full border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-            onChange={(date) => hdlChengeEndDate(new Date(date?.$d).toLocaleDateString())}
+            onChange={(date) => hdlChengeEndDate(date.toDate())}
             locale={buddhistLocale}
             placeholder="เลือกวันที่..."
           />
