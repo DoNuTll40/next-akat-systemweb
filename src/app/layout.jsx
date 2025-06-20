@@ -6,6 +6,7 @@ import { GoogleAnalytics } from "@next/third-parties/google"
 export const metadata = {
   title: "ระบบจัดการเว็บไซต์",
   description: "ระบบจัดการเว็บไซต์",
+  manifest: '/hospital/manifest.json',
   icons: {
     icon: [
       {
