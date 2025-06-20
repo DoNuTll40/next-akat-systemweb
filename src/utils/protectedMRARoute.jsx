@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import LoadingPage from "../app/loading";
 import Forbidden from "../app/forbidden";
+import { toast } from "react-toastify";
 
 export default function ProtectedMRARoute({ children }) {
   const { user, loading } = AuthHook();
@@ -13,32 +14,28 @@ export default function ProtectedMRARoute({ children }) {
 
   useEffect(() => {
     setIsClient(true);
+  }, []);
 
-    // ถ้าการโหลดเสร็จแล้ว และไม่มี user หรือ user ไม่มี position
-    if (!loading) {
-      if (!user || !user.positions) {
-        // redirect ไปหน้า login เมื่อ user ไม่ได้ login
-        router.replace("/auth/login");
-      }
-      // ไม่ต้อง redirect ถ้า user เป็น admin (จะตรวจสอบใน return ข้างล่าง)
+  useEffect(() => {
+    if (!isClient || loading) return;
+
+    if (!user || !user.positions) {
+      router.replace("/auth/login");
+      return;
     }
-  }, [user, loading, router]);
 
-  // ถ้ากำลังโหลด หรือยังไม่ใช่ client-side
+    const allowDepartments = [26, 34, 41];
+    const departmentId = user?.departments?.department_id;
+
+    if (!allowDepartments.includes(departmentId)) {
+      toast.error("คุณไม่มีสิทธิ์เข้าถึงหน้านี้");
+      router.replace(`/${user.status.toLowerCase()}`);
+    }
+  }, [isClient, user, loading, router]);
+
   if (loading || !isClient) {
     return <LoadingPage />;
   }
 
-  // ถ้ามี user และ status เป็น admin ให้แสดง children
-  // ถ้าไม่ใช่ admin ให้แสดง forbidden
-  if (!user) {
-    // ถ้าไม่มี user จะไม่มาถึงจุดนี้ เพราะถูก redirect ไปแล้วใน useEffect
-    return <LoadingPage />;
-  }
-
-  return user?.status?.toLowerCase() === "admin" ? (
-    <>{children}</>
-  ) : (
-    <Forbidden />
-  );
+  return <>{children}</>;
 }

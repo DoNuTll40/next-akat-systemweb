@@ -28,7 +28,7 @@ export const MRAThemes = {
     textHeaderTable: "#ffffff",
   },
   hospitalGreen: {
-    name: "เขียว รพ.",
+    name: "เขียว",
     headerBg: "#059669",
     headerText: "#ffffff",
     sidebarBg: "#10b981",
@@ -42,7 +42,7 @@ export const MRAThemes = {
     textHeaderTable: "#ffffff",
   },
   elegantGray: {
-    name: "เทาเรียบ สุภาพ",
+    name: "เทาเรียบ",
     headerBg: "#f3f4f6",
     headerText: "#1f2937",
     sidebarBg: "#e5e7eb",
@@ -56,7 +56,7 @@ export const MRAThemes = {
     textHeaderTable: "#1f2937",
   },
   auditRed: {
-    name: "แดงเข้ม ทางการ",
+    name: "แดงเข้ม",
     headerBg: "#b91c1c",
     headerText: "#ffffff",
     sidebarBg: "#dc2626",
@@ -70,7 +70,7 @@ export const MRAThemes = {
     textHeaderTable: "#ffffff",
   },
   midnight: {
-    name: "มืดทันสมัย",
+    name: "มืด",
     headerBg: "#111827",
     headerText: "#ffffff",
     sidebarBg: "#1f2937",
@@ -84,7 +84,7 @@ export const MRAThemes = {
     textHeaderTable: "#ffffff",
   },
   softPink: {
-    name: "ชมพูหวาน",
+    name: "ชมพู",
     headerBg: "#fce7f3",
     headerText: "#831843",
     sidebarBg: "#fbcfe8",
@@ -98,7 +98,7 @@ export const MRAThemes = {
     textHeaderTable: "#831843",
   },
   royalPurple: {
-    name: "ม่วงหรูหรา",
+    name: "ม่วง",
     headerBg: "#6d28d9",
     headerText: "#ffffff",
     sidebarBg: "#a78bfa",

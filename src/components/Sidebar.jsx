@@ -96,7 +96,12 @@ export default function SideBar() {
       name: "Medical Record Audit",
       path: "/mra",
       title: "Medical Record Audit",
-      status: "ADMIN",
+      // status: "ADMIN",
+      department: [
+        { department_id: 26 },
+        { department_id: 34 },
+        { department_id: 41 }
+      ],
       lock: <Lock size={15} strokeWidth={1} />,
       unLock: <LockOpen size={15} strokeWidth={1} />,
     },
@@ -162,6 +167,13 @@ export default function SideBar() {
 
   const isActive = (item) => item.path === activeMenu.path;
 
+  const hasAccess = (item) => {
+    console.log(item)
+    if (item.status && user?.status !== item.status) return false;
+    if (item.department && !item.department.some(dep => dep.department_id === user?.departments?.department_id)) return false;
+    return true;
+  };
+
   return (
     <>    
       <div
@@ -189,7 +201,8 @@ export default function SideBar() {
                         <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
                       </div>
                       <div className="flex gap-2">
-                        {user?.status !== item.status ? item.department?.some(dep => dep.department_id === user?.departments?.department_id) ? item.unLock : item.lock : item.unLock}
+                        {console.log(hasAccess(item))}
+                        {hasAccess(item) ? item.unLock : item.lock}
                         <ChevronDown
                           className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
                           size={16}
@@ -208,7 +221,7 @@ export default function SideBar() {
                         <span>{item.icon}</span>
                         <span className={`${isMini && !onHover && "hidden"}`}>{item.name}</span>
                       </div>
-                      {user?.status !== item.status ? item.lock : item.unLock}
+                      {hasAccess(item) ? item.unLock : item.lock}
                     </Link>
                   )}
 
@@ -278,7 +291,7 @@ export default function SideBar() {
                         <span>{item.name}</span>
                       </div>
                       <div className="flex gap-2">
-                        {user?.status !== item.status ? item.department?.some(dep => dep.department_id === user?.departments?.department_id) ? item.unLock : item.lock : item.unLock}
+                        {hasAccess(item) ? item.unLock : item.lock}
                         <ChevronDown
                           className={`transform transition-all ease-in-out duration-300 ${submenuOpen === index ? "-rotate-180" : ""}`}
                           size={16}
