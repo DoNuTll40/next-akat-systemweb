@@ -263,24 +263,58 @@ export default function AttendancePage() {
       ),
       width: "7rem"
     },
-    {
-      title: "วันที่สร้าง",
-      dataIndex: "created_at",
-      render: (date) => convertDateTime(date),
-      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+        {
+      title: "ออกนอกสถานที่",
+      dataIndex: "desc_end",
+      sorter: (a, b) => a.desc_end?.localeCompare(b.desc_end),
       ellipsis: true,
-      responsive: ["lg"],
+      render: (_, record) => (
+        <div className="w-full h-full flex flex-col gap-1">
+          <div className="flex gap-1">
+            {/* <p className="text-xs text-white font-bold bg-amber-500 py-0.5 px-2 rounded w-fit">{record?.desc_end || "-"}</p> */}
+            <a
+              href={`https://www.google.com/maps?q=${record.location_lat_end},${record.location_lon_end}`}
+              target="_blank"
+              // rel="noopener noreferrer"
+              class
+              className="text-xs text-white font-bold bg-amber-500 py-0.5 px-2 rounded w-fit"
+              hidden={!record?.desc_end}
+            >
+              สถานที่ลงชื่อ
+            </a>
+          </div>
+          <p className={`text-xs text-white font-bold bg-red-500 py-0.5 px-2 rounded w-fit ${!record?.desc_start && "hidden"}`}>{record?.desc_start && "นอกสถานที่"}</p>
+        </div>
+      ),
+      // filters: uniqueCheckShifts,
+      // onFilter: (value, record) => record.shifts?.shift_name === value,
       width: "8rem"
     },
     {
-      title: "อัพเดทล่าสุด",
-      dataIndex: "updated_at",
-      render: (date) => convertDateTime(date),
-      sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
+      title: "หมายเหตุเข้างาน",
+      dataIndex: "desc_end",
+      sorter: (a, b) => a.desc_end.localeCompare(b.desc_end),
       ellipsis: true,
-      responsive: ["lg"],
-      width: "8rem"
+      width: "11rem"
     },
+    // {
+    //   title: "วันที่สร้าง",
+    //   dataIndex: "created_at",
+    //   render: (date) => convertDateTime(date),
+    //   sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+    //   ellipsis: true,
+    //   responsive: ["lg"],
+    //   width: "8rem"
+    // },
+    // {
+    //   title: "อัพเดทล่าสุด",
+    //   dataIndex: "updated_at",
+    //   render: (date) => convertDateTime(date),
+    //   sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
+    //   ellipsis: true,
+    //   responsive: ["lg"],
+    //   width: "8rem"
+    // },
   ];
   // สิ้นสุด
 
@@ -445,10 +479,6 @@ export default function AttendancePage() {
       toast.error(err.response?.data?.message)
     }
   }
-  
-  console.log(startDate)
-  console.log("moment "+moment())
-  console.log("momentStart " +moment(startDate))
 
   return (
     <div className="bg-white p-4 rounded-xl select-none shadow-md">
@@ -491,7 +521,8 @@ export default function AttendancePage() {
           <DatePicker
             inputReadOnly
             className="w-full border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(date) => hdlChengeStartDate(date.toDate())}
+            onChange={(date) => date === null ? (setStartDate(null), setEndDate(null)) : hdlChengeStartDate(date.toDate())}
+            
             locale={buddhistLocale}
             placeholder="เลือกวันที่..."
           />
