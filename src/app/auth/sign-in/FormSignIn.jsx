@@ -180,7 +180,7 @@ export default function FormSignIn() {
 
         <Link
           className="text-center text-xs mt-5 hover:underline underline-offset-2 hover:text-blue-800 transition"
-          href={"/admin/auth/login"}
+          href={"/auth/login"}
         >
           เข้าสู่ระบบ
         </Link>
