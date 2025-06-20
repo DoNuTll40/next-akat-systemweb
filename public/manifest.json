@@ -1,6 +1,6 @@
 {
-  "name": "Hospital System App",
-  "short_name": "Hospital System",
+  "name": "Akathospital System",
+  "short_name": "Akathospital System",
   "start_url": "/hospital/admin",
   "display": "standalone",
   "icons": [
