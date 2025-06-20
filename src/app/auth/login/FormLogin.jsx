@@ -106,7 +106,7 @@ export default function FormLogin() {
                         </div>
                     } />
                 </div>
-                <Link className="text-center text-xs mt-5 hover:underline underline-offset-2 hover:text-blue-800 transition" href={"/admin/auth/sign-in"}>สร้างผู้ใช้งาน</Link>
+                <Link className="text-center text-xs mt-5 hover:underline underline-offset-2 hover:text-blue-800 transition" href={"/auth/sign-in"}>สร้างผู้ใช้งาน</Link>
 
             </form>
         </div>
