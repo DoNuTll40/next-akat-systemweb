@@ -1,10 +1,8 @@
 {
-  "name": "Hospital SystemApp",
-  "short_name": "Hospital",
-  "start_url": "/hospital",
+  "name": "Hospital System App",
+  "short_name": "Hospital System",
+  "start_url": "/hospital/admin",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#317EFB",
   "icons": [
     {
       "src": "/hospital/images/moph-sm-192x192.png",
