@@ -15,6 +15,8 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { render } from "@react-pdf/renderer";
 import moment from "moment";
+import AttendanceHook from "@/hooks/AttendanceHook";
+import { usePathname, useRouter } from "next/navigation";
 
 dayjs.extend(buddhistEra);
 dayjs.locale(dayTh);
@@ -31,42 +33,17 @@ const buddhistLocale = {
 };
 
 export default function AttendancePage() {
-  const [data, setData] = useState([]);
+  const {  data, setData, loading, setLoading, fetchApi, token } = AttendanceHook();
   const [search, setSearch] = useState("");
   const { RangePicker } = DatePicker;
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [errMsg, setErrMsg] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(null);
   const [statusExport, setStatusExport] = useState(false);
 
-  useEffect(() => {
-    fetchApi();
-  }, []);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const fetchApi = async () => {
-    sessionStorage.setItem("fetchAttendanceTimeStamp", new Date());
-    let token = localStorage.getItem("token");
-    setToken(token)
-    try {
-      setData([])
-      const rs = await axios.get("/public/fetchDataAllAttendanceRecord", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (rs.status === 200) {
-        setData(rs.data.data);
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false)
-    }
-  };
-  
   const hdlSearchInput = (e) => {
     setSearch(e.target.value)
   }
@@ -196,7 +173,7 @@ export default function AttendancePage() {
     {
       title: "หมายเหตุเข้างาน",
       dataIndex: "desc_start",
-      sorter: (a, b) => a.desc_start.localeCompare(b.desc_start),
+      // sorter: (a, b) => a.desc_start.localeCompare(b.desc_start),
       ellipsis: true,
       width: "11rem"
     },
@@ -219,11 +196,11 @@ export default function AttendancePage() {
     {
       title: "ออกงาน",
       dataIndex: "check_out_status",
-      sorter: (a, b) => {
-        // ตรวจสอบว่ามีข้อมูลหรือไม่ทั้ง a และ b
-        if (!a.check_out_status?.check_out_status_name || !b.check_out_status?.check_out_status_name) return 0; 
-        return a.check_out_status.check_out_status_name.localeCompare(b.check_out_status.check_out_status_name);
-      },
+      // sorter: (a, b) => {
+      //   // ตรวจสอบว่ามีข้อมูลหรือไม่ทั้ง a และ b
+      //   if (!a.check_out_status?.check_out_status_name || !b.check_out_status?.check_out_status_name) return 0; 
+      //   return a.check_out_status.check_out_status_name.localeCompare(b.check_out_status.check_out_status_name);
+      // },
       ellipsis: true,
       render: (check_out_status) => check_out_status?.check_out_status_name || "ไม่มีข้อมูล",
       filters: uniqueCheckOutStatus,
@@ -293,7 +270,7 @@ export default function AttendancePage() {
     {
       title: "หมายเหตุเข้างาน",
       dataIndex: "desc_end",
-      sorter: (a, b) => a.desc_end.localeCompare(b.desc_end),
+      // sorter: (a, b) => a.desc_end.localeCompare(b.desc_end),
       ellipsis: true,
       width: "11rem"
     },
@@ -596,6 +573,12 @@ export default function AttendancePage() {
           defaultPageSize: 10,
           showTotal: (total) => `ทั้งหมด ${total} รายการ`,
         }}
+        onRow={(record) => ({
+          onClick: () => {
+            router.replace(`${pathname}/${record.attendance_record_id}`);
+          },
+          style: { cursor: 'pointer' }
+        })}
       />
     </div>
   );

@@ -135,10 +135,12 @@ export default function SideBar() {
       let initialSubmenuOpen = savedSubmenu ? parseInt(savedSubmenu) : null;
       sideBar.forEach((item, index) => {
         if (item.submenu) {
-          const isSubmenuActive = item.submenu.some((submenuItem) => pathname.startsWith(submenuItem.path));
+
+          const isSubmenuActive = item.submenu.some((submenuItem) => pathname === submenuItem.path || pathname.startsWith(`${submenuItem.path}/`))
           if (isSubmenuActive) {
             initialSubmenuOpen = index;
           }
+
         }
       });
 
@@ -238,7 +240,7 @@ export default function SideBar() {
                               key={si}
                               href={sub.path}
                               prefetch={false}
-                              className={`flex p-2 pl-4 my-0.5 rounded-l-full transition ${pathname === sub.path ? "bg-gray-300" : "hover:bg-gray-200"}`}
+                              className={`flex p-2 pl-4 my-0.5 rounded-l-full transition ${pathname === sub.path || pathname.startsWith(`${sub.path}/`) ? "bg-gray-300" : "hover:bg-gray-200"}`}
                             >
                               - {sub.name}
                             </Link>
@@ -329,7 +331,7 @@ export default function SideBar() {
                               onClick={toggleHamburger}
                               href={sub.path}
                               prefetch={false}
-                              className={`flex p-2 pl-4 my-1 rounded-full drop-shadow-sm transition border-white border bg-white/60 ${pathname === sub.path ? "bg-white" : "hover:bg-gray-100"}`}
+                              className={`flex p-2 pl-4 my-1 rounded-full drop-shadow-sm transition border-white border bg-white/60  ${pathname === sub.path || pathname.startsWith(`${sub.path}/`) ? "bg-white" : "hover:bg-gray-100"}`}
                             >
                               - {sub.name}
                             </Link>

@@ -1,7 +1,7 @@
 "use client";
 
 import AuthHook from "@/hooks/AuthHook";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Forbidden from "@/app/forbidden";
 import LoadingPage from "@/app/loading";
@@ -11,6 +11,8 @@ export default function ProtectedAdminRoute({ children }) {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
+  const pathname = usePathname();
+
   useEffect(() => {
     setIsClient(true);
 
@@ -18,11 +20,11 @@ export default function ProtectedAdminRoute({ children }) {
     if (!loading) {
       if (!user || !user.positions) {
         // redirect ไปหน้า login เมื่อ user ไม่ได้ login
-        router.replace("/auth/login");
+        router.replace(`/auth/login?redirect=${pathname}`);
       }
       // ไม่ต้อง redirect ถ้า user เป็น admin (จะตรวจสอบใน return ข้างล่าง)
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, pathname]);
 
   // ถ้ากำลังโหลด หรือยังไม่ใช่ client-side
   if (loading || !isClient) {

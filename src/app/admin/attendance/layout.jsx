@@ -1,6 +1,11 @@
+import { AttendanceContextProvider } from "@/contexts/AttendanceContext";
 
-export default function layout({children}) {
+export default function layout({ children }) {
   return (
-    <>{children}</>
-  )
+    <>
+      <AttendanceContextProvider>
+        {children}
+      </AttendanceContextProvider>
+    </>
+  );
 }

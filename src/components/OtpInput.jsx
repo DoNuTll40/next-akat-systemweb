@@ -8,7 +8,7 @@ import { Button } from "primereact/button";
 import { toast } from "react-toastify";
 import { Info } from "lucide-react";
 import axios from "@/configs/axios.mjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function OtpInput() {
   const { showModalOtp, login, setShowModalOtp, verify, setInputLogin, user, setUser } = AuthHook();
@@ -19,6 +19,8 @@ export default function OtpInput() {
   const otpRef = useRef(null);
   
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   
   useEffect(() => {
     if (otpRef.current && showModalOtp) {
@@ -84,6 +86,10 @@ export default function OtpInput() {
           localStorage.setItem("isAuthen", JSON.stringify(rs2.data?.data))
           
           let status = rs2.data.data.status.toLowerCase();
+
+          if(redirect) { 
+            return router.replace(redirect);
+          }
 
           if (status === "admin") {
             router.push("/admin");

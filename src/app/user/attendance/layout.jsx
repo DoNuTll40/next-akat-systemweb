@@ -1,7 +1,12 @@
+import { AttendanceContextProvider } from "@/contexts/AttendanceContext";
 import ProtectedAttendancePage from "@/utils/protectedAttendacePage";
 
-export default function layout({children}) {
+export default function layout({ children }) {
   return (
-    <ProtectedAttendancePage>{children}</ProtectedAttendancePage>
-  )
+    <AttendanceContextProvider>
+      <ProtectedAttendancePage>
+        {children}
+      </ProtectedAttendancePage>
+    </AttendanceContextProvider>
+  );
 }
