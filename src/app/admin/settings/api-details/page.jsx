@@ -8,6 +8,7 @@ import { CirclePlus, ListChecks, Edit, Delete } from "lucide-react"; // เพ�
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import axiosProvider from "axios"
 
 export default function Page() {
   const [data, setData] = useState([]);
@@ -253,6 +254,11 @@ export default function Page() {
     },
   ];
 
+  const hdlProvider = async () => {
+    const res = await axiosProvider.get("https://moph.id.th/oauth/redirect?client_id=9cdb0214-b2e8-41d7-919d-2efad2ee75f7&redirect_uri=https://akathos.moph.go.th/hospital/admin/settings/api-details&response_type=code")
+    console.log(res)
+  }
+
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm select-none">
       <div className="my-2 font-semibold pl-1.5 bg-blue-900 rounded-md shadow-sm">
@@ -314,7 +320,7 @@ export default function Page() {
       />
 
       <div>
-        <a href="https://moph.id.th/oauth/redirect?client_id=9cdb0214-b2e8-41d7-919d-2efad2ee75f7&redirect_uri=https://akathos.moph.go.th/hospital/admin/settings/api-details&response_type=code">test</a>
+        <p onClick={hdlProvider}>test</p>
         <p>123456</p>
       </div>
     </div>
