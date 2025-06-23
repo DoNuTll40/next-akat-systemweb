@@ -314,7 +314,7 @@ export default function Page() {
       />
 
       <div>
-        <a href="https://provider.id.th//oauth/redirect?client_id=cc7caf68-1df5-4e6e-ab51-6902ff3b0608URRovaPpiHITgxSgDbbPOYWHHJu&redirect_uri=https://akathos.moph.go.th/hospital/admin/settings/api-details&response_type=code">test</a>
+        <a href="https://uat-moph.id.th/oauth/redirect?client_id=9cdb01a8-c108-4a87-90bf-af6206aa1e0d&redirect_uri=https://akathos.moph.go.th/hospital/admin/settings/api-details&response_type=code">test</a>
         <p>123456</p>
       </div>
     </div>
