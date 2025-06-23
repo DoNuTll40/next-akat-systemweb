@@ -260,7 +260,7 @@ export default function AttendancePage() {
               สถานที่ลงชื่อ
             </a>
           </div>
-          <p className={`text-xs text-white font-bold bg-red-500 py-0.5 px-2 rounded w-fit ${!record?.desc_start && "hidden"}`}>{record?.desc_start && "นอกสถานที่"}</p>
+          <p className={`text-xs text-white font-bold bg-red-500 py-0.5 px-2 rounded w-fit ${!record?.desc_end && "hidden"}`}>{record?.desc_end && "นอกสถานที่"}</p>
         </div>
       ),
       // filters: uniqueCheckShifts,
