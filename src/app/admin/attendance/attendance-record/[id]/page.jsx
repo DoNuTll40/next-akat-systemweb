@@ -132,7 +132,7 @@ export default function AttendanceDetailPage() {
               <div className="w-full h-64 rounded-md overflow-hidden shadow-md border border-gray-200">
                 <iframe
                   // Corrected map URL - again, ensure this is correct for your Google Maps setup
-                  src={`http://maps.google.com/maps?q=${data.location_lat_start},${data.location_lon_start}&t=p&z=17&ie=UTF8&iwloc=B&output=embed`}
+                  src={`https://maps.google.com/maps?q=${data.location_lat_start},${data.location_lon_start}&t=p&z=17&ie=UTF8&iwloc=B&output=embed`}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -179,7 +179,7 @@ export default function AttendanceDetailPage() {
               <div className="w-full h-64 rounded-md overflow-hidden shadow-md border border-gray-200">
                 <iframe
                   // Corrected map URL - ensure this is correct for your Google Maps setup
-                  src={`http://maps.google.com/maps?q=${data.location_lat_end},${data.location_lon_end}&t=p&z=17&ie=UTF8&iwloc=B&output=embed`}
+                  src={`https://maps.google.com/maps?q=${data.location_lat_end},${data.location_lon_end}&t=p&z=17&ie=UTF8&iwloc=B&output=embed`}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
