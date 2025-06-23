@@ -151,7 +151,7 @@ export default function AttendancePage() {
       render: (_, record) => (
         <div className="w-full h-full flex flex-col gap-1">
           <div className="flex gap-1">
-            <p className="text-xs text-white font-bold bg-amber-500 py-0.5 px-2 rounded w-fit">{record?.shifts?.shift_name || "-"}</p>
+            <p className={`text-xs text-white font-bold bg-amber-500 py-0.5 px-2 rounded w-fit ${!record?.shifts?.shift_name && "hidden"}`}>{record?.shifts?.shift_name}</p>
             <a
               href={`https://www.google.com/maps?q=${record.location_lat_start},${record.location_lon_start}`}
               target="_blank"
@@ -575,7 +575,7 @@ export default function AttendancePage() {
         }}
         onRow={(record) => ({
           onClick: () => {
-            router.replace(`${pathname}/${record.attendance_record_id}`);
+            router.push(`${pathname}/${record.attendance_record_id}`);
           },
           style: { cursor: 'pointer' }
         })}
