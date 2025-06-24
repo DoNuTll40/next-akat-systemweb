@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "@/configs/axios.mjs";
-import { convertDateTime } from "@/services/convertDate";
+import { convertDate, convertDateTime } from "@/services/convertDate";
 import { DatePicker, Empty, Table } from "antd";
 import dayjs from "dayjs";
 import dayTh from "dayjs/locale/th";
@@ -178,9 +178,18 @@ export default function AttendancePage() {
       width: "11rem"
     },
     {
+      title: "วันเข้างาน",
+      dataIndex: "created_at",
+      // responsive: ["lg"],
+      sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+      render: (created_at) => (moment(created_at).add(543, "years").format("DD/MM/YYYY")),
+      ellipsis: true,
+      width: "6rem"
+    },
+    {
       title: "เวลาเข้างาน",
       dataIndex: "starting",
-      responsive: ["lg"],
+      // responsive: ["lg"],
       sorter: (a, b) => a.starting.localeCompare(b.starting),
       ellipsis: true,
       width: "7rem"
@@ -202,13 +211,25 @@ export default function AttendancePage() {
       //   return a.check_out_status.check_out_status_name.localeCompare(b.check_out_status.check_out_status_name);
       // },
       ellipsis: true,
-      render: (check_out_status) => check_out_status?.check_out_status_name || "ไม่มีข้อมูล",
+      render: (check_out_status) => check_out_status?.check_out_status_name || "",
       filters: uniqueCheckOutStatus,
       onFilter: (value, record) => {
         return record.check_out_status?.check_out_status_name === value || (!record.check_out_status?.check_out_status_name && value === 'ไม่มีข้อมูล');
       },
       width: "7rem"
     },    
+    {
+      title: "วันออกงาน",
+      dataIndex: "updated_at",
+      responsive: ["lg"],
+      sorter: (a, b) => {
+        if (!a.updated_at || !b.updated_at) return 0; // ถ้าไม่มีข้อมูล ไม่ให้ทำการเรียงลำดับ
+        return a.updated_at.localeCompare(b.updated_at); // ถ้ามีข้อมูล ก็ทำการเรียง
+      },
+      render: (_, record) => record.ending ? moment(record.updated_at).add(543, "years").format("DD/MM/YYYY") : "",
+      ellipsis: true,
+      width: "7rem"
+    },
     {
       title: "เวลาออกงาน",
       dataIndex: "ending",
@@ -217,14 +238,13 @@ export default function AttendancePage() {
         if (!a.ending || !b.ending) return 0; // ถ้าไม่มีข้อมูล ไม่ให้ทำการเรียงลำดับ
         return a.ending.localeCompare(b.ending); // ถ้ามีข้อมูล ก็ทำการเรียง
       },
-      render: (ending) => ending || "ไม่มีข้อมูล",
+      render: (ending) => ending || "",
       ellipsis: true,
       width: "7rem"
     },
     {
       title: "ประเภทวัน",
       dataIndex: "shift_types",
-      responsive: ["lg"],
       sorter: (a, b) => a.shift_types.shift_type_name.localeCompare(b.shift_types.shift_type_name),
       render: (shift_types) => shift_types?.shift_type_name || "-",
       ellipsis: true,
@@ -236,7 +256,7 @@ export default function AttendancePage() {
       title: "ลงชื่อออก",
       dataIndex: "endingSignatureUrl",
       render: (endingSignatureUrl) => (
-        endingSignatureUrl ? <img className="pointer-events-none" src={endingSignatureUrl} alt="signatureOut" /> : "ไม่มีข้อมูล"
+        endingSignatureUrl ? <img className="pointer-events-none" src={endingSignatureUrl} alt="signatureOut" /> : ""
       ),
       width: "7rem"
     },

@@ -99,7 +99,7 @@ export default function page() {
         ))}
       </div>
 
-      <div className="border rounded px-2 pt-1.5 w-fit" >
+      <div className="border rounded px-2 pt-1.5 w-fit hidden" >
         <a href="https://moph.id.th/oauth/redirect?client_id=9cdb0214-b2e8-41d7-919d-2efad2ee75f7&redirect_uri=https://akathos.moph.go.th/hospital/admin&response_type=code">ทดสอบ Provider ID</a>
       </div>
     </div>
