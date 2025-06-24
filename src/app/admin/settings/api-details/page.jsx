@@ -320,7 +320,7 @@ export default function Page() {
       />
 
       <div>
-        <a href="https://moph.id.th/oauth/redirect?client_id=9cdb0214-b2e8-41d7-919d-2efad2ee75f7&redirect_uri=https://akathos.moph.go.th/hospital/admin/settings/api-details&response_type=code">test</a>
+        <a href="https://moph.id.th/oauth/redirect?client_id=9cdb0214-b2e8-41d7-919d-2efad2ee75f7&redirect_uri=http://localhost:3000/hospital/admin/settings/api-details&response_type=code">test</a>
         <p>123456</p>
       </div>
     </div>
