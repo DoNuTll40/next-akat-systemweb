@@ -12,39 +12,33 @@ export default function Layout({children}) { // เปลี่ยนชื่�
   const [showModalSync, setShowModalSync] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false); // เพิ่ม state เพื่อเก็บสถานะการยืนยันตัวตนจาก localStorage
   const [hasCheckedAuth, setHasCheckedAuth] = useState(false); // เพิ่ม state เพื่อบอกว่าเช็ค localStorage แล้ว
-  const { user } = AuthHook();
+  const [isAuthen, setIsAuthen] = useState({});
 
   const toggleModalSync = () => {
     setShowModalSync(!showModalSync)
   }
 
-  // *** แก้ไขตรงนี้ ***
   useEffect(() => {
-    // โค้ดใน useEffect นี้จะรันเฉพาะบนฝั่ง Client เท่านั้น
-    if (typeof window !== 'undefined') { // ตรวจสอบอีกครั้งเพื่อความชัวร์ (แม้ use client จะช่วยได้มากแล้ว)
+    if (typeof window !== 'undefined') {
       if (localStorage.getItem("isAuthen")) {
-        setIsAuthenticated(true); // ตั้งค่าสถานะว่ามีการยืนยันตัวตนแล้ว
+        setIsAuthen(JSON.parse(localStorage.getItem("isAuthen")));
+        setIsAuthenticated(true);
       }
     }
-    setHasCheckedAuth(true); // ตั้งค่าว่าได้ทำการเช็ค localStorage แล้ว
-  }, []); // [] เพื่อให้รันแค่ครั้งเดียวตอน mount
+    setHasCheckedAuth(true);
+  }, []);
 
-  // ตรวจสอบหลังจากที่ useEffect ทำงานและเช็ค authentication แล้ว
   if (hasCheckedAuth && isAuthenticated) {
-    // ถ้ามีการยืนยันตัวตนแล้ว และเราได้เช็คแล้ว (ป้องกันการ flash)
-    if (typeof window !== 'undefined' && window.history.length > 1) { // ตรวจสอบ window อีกครั้งสำหรับ history
+    if (typeof window !== 'undefined' && window.history.length > 1) {
       router.back();
-    } else if (user?.status) {
-      router.push(`/${user?.status?.toLowerCase()}`);
+    } else if (setIsAuthen?.status) {
+      router.push(`/${setIsAuthen?.status?.toLowerCase()}`);
     } else {
       router.push("/auth/login");
     }
-    return null; // ไม่ต้อง render อะไร ถ้าผู้ใช้ถูก redirect
+    return null;
   }
 
-  // ถ้ายังไม่ได้เช็ค authentication หรือยังไม่ได้รับการยืนยันตัวตน
-  // และยังไม่ครบวงจรการเช็ค (hasCheckedAuth เป็น false)
-  // อาจจะแสดง loading หรือ null ชั่วคราว เพื่อป้องกันการ flash ของ content
   if (!hasCheckedAuth) {
     return null; // หรือแสดง <LoadingSpinner />
   }
