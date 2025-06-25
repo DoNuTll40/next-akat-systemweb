@@ -12,6 +12,7 @@ export default function Layout({children}) { // เปลี่ยนชื่�
   const [showModalSync, setShowModalSync] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false); // เพิ่ม state เพื่อเก็บสถานะการยืนยันตัวตนจาก localStorage
   const [hasCheckedAuth, setHasCheckedAuth] = useState(false); // เพิ่ม state เพื่อบอกว่าเช็ค localStorage แล้ว
+  const { user } = AuthHook();
 
   const toggleModalSync = () => {
     setShowModalSync(!showModalSync)
@@ -34,7 +35,7 @@ export default function Layout({children}) { // เปลี่ยนชื่�
     if (typeof window !== 'undefined' && window.history.length > 1) { // ตรวจสอบ window อีกครั้งสำหรับ history
       router.back();
     } else {
-      router.replace("/");
+      router.push(`/${user.status.toLowerCase()}`);
     }
     return null; // ไม่ต้อง render อะไร ถ้าผู้ใช้ถูก redirect
   }

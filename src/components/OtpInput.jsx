@@ -88,7 +88,7 @@ export default function OtpInput() {
           let status = rs2.data.data.status.toLowerCase();
 
           if(redirect) { 
-            return router.replace(redirect);
+            return router.push(redirect);
           }
 
           if (status === "admin") {
@@ -107,6 +107,8 @@ export default function OtpInput() {
     } catch (err) {
       toast.error(err.response?.data.message);
       setErrMsg(err.response?.data.message);
+    } finally {
+      setShowModalOtp(false);
     }
   };
 
