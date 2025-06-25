@@ -34,8 +34,10 @@ export default function Layout({children}) { // เปลี่ยนชื่�
     // ถ้ามีการยืนยันตัวตนแล้ว และเราได้เช็คแล้ว (ป้องกันการ flash)
     if (typeof window !== 'undefined' && window.history.length > 1) { // ตรวจสอบ window อีกครั้งสำหรับ history
       router.back();
-    } else {
+    } else if (user?.status) {
       router.push(`/${user?.status?.toLowerCase()}`);
+    } else {
+      router.push("/auth/login");
     }
     return null; // ไม่ต้อง render อะไร ถ้าผู้ใช้ถูก redirect
   }
