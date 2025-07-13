@@ -17,6 +17,7 @@ import { render } from "@react-pdf/renderer";
 import moment from "moment";
 import AttendanceHook from "@/hooks/AttendanceHook";
 import { usePathname, useRouter } from "next/navigation";
+import AuthHook from "@/hooks/AuthHook.mjs";
 
 dayjs.extend(buddhistEra);
 dayjs.locale(dayTh);
@@ -33,6 +34,7 @@ const buddhistLocale = {
 };
 
 export default function AttendancePage() {
+  const { user } = AuthHook();
   const {  data, setData, loading, setLoading, fetchApi, token } = AttendanceHook();
   const [search, setSearch] = useState("");
   const { RangePicker } = DatePicker;
@@ -40,6 +42,7 @@ export default function AttendancePage() {
   const [endDate, setEndDate] = useState("");
   const [errMsg, setErrMsg] = useState(null);
   const [statusExport, setStatusExport] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -345,24 +348,32 @@ export default function AttendancePage() {
   
     // กำหนดส่วนหัว
     worksheet.columns = [
-      { header: "ลำดับ", key: "index", width: 15 },
+      { header: "ลำดับ", key: "index", width: 6 },
       { header: "ชื่อ", key: "user", width: 25 },
-      { header: "กะ", key: "shift_type", width: 20 },
+      { header: "กะ", key: "shifts", width: 10 },
       { header: "เวลาเข้า", key: "starting", width: 15 },
       { header: "สถานะเข้า", key: "check_in_status", width: 20 },
       { header: "ลายเซ็นเข้า", key: "starting_signature", width: 20 },
       { header: "เวลาออก", key: "ending", width: 15 },
       { header: "สถานะออก", key: "check_out_status", width: 20 },
       { header: "ลายเซ็นออก", key: "ending_signature", width: 20 },
+      { header: "ประเภทเวร", key: "shift_type", width: 25 },
     ];
   
-    // ทำให้ส่วนหัวสวย
+    // ปรับแต่งส่วนหัว
     worksheet.getRow(1).font = { bold: true };
     worksheet.getRow(1).alignment = { horizontal: "center" };
     worksheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "D3D3D3" } };
   
     // วนลูปข้อมูล
-    for (const item of dataSource) {
+    for (let i = 0; i < dataSource.length; i++) {
+      const item = dataSource[i];
+
+      setProgress(Math.round(((i + 1) / dataSource.length) * 100));
+
+      // พักให้ React มีโอกาส re-render UI (เช่น แสดง progress bar) ทุกๆ 10 รายการ
+      if (i % 10 === 0) await new Promise(resolve => setTimeout(resolve, 0));
+
       let startingImageId = null;
       let endingImageId = null;
   
@@ -410,13 +421,14 @@ export default function AttendancePage() {
       const row = worksheet.addRow({
         index: item.index,
         user: `${item.users.prefixes?.prefix_name} ${item.users.fullname_thai}`,
-        shift_type: item.shift_types.shift_type_name,
+        shifts: item.shifts.shift_name,
         starting: item.starting,
         check_in_status: item.check_in_status.check_in_status_name,
         starting_signature: startingImageId !== null ? "" : "ไม่มีลายเซ็น",
         ending: item.ending || "ไม่มีข้อมูล",
         check_out_status: item.check_out_status?.check_out_status_name || "ไม่มีข้อมูล",
         ending_signature: endingImageId !== null ? "" : "ไม่มีลายเซ็น",
+        shift_type: item.shift_types.shift_type_name,
       });
   
       // เพิ่มรูปภาพ
@@ -441,8 +453,20 @@ export default function AttendancePage() {
     // ดาวน์โหลดไฟล์
     const buffer = await workbook.xlsx.writeBuffer();
     const dataBlob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-    const date = new Date().toLocaleDateString("th-TH").replace(/\//g, "-");
-    saveAs(dataBlob, `ข้อมูลการเข้าออกงาน_${date}.xlsx`);
+
+    let dateLabel = new Date().toLocaleDateString("th-TH").replace(/\//g, "-");
+
+    if (startDate && endDate) {
+      const start = new Date(startDate).toLocaleDateString("th-TH").replace(/\//g, "-");
+      const end = new Date(endDate).toLocaleDateString("th-TH").replace(/\//g, "-");
+
+      dateLabel = start === end ? start : `${start} ถึง ${end}`;
+    }
+
+    const fileName = `ข้อมูลการเข้าออกงานวันที่ ${dateLabel}.xlsx`;
+
+    saveAs(dataBlob, fileName);
+
     setStatusExport(false);
   };
 
@@ -488,6 +512,13 @@ export default function AttendancePage() {
         </h1>
       </div>
 
+      {/* สถานะการ Export */}
+      {statusExport && (
+        <div className="w-full bg-gray-200 rounded h-1.5 overflow-hidden transition-all shadow block md:hidden">
+          <div className="bg-green-700 h-1.5 transition-all duration-300 rounded-full" style={{ width: `${progress}%` }}></div>
+        </div>
+      )}
+
       {/* ช่องค้นหาและปุ่ม Export */}
       <div className="flex justify-between items-center px-2 my-4 gap-4">
         <div className="relative w-full md:w-1/3">
@@ -499,16 +530,26 @@ export default function AttendancePage() {
             placeholder="ค้นหา..."
           />
         </div>
-        <Button
-          className="px-4 py-2 text-sm font-semibold disabled:opacity-50 rounded-md bg-green-800 hover:bg-green-700 transition-all text-white shadow-sm"
-          onClick={exportToExcel}
-          disabled={!dataSource || statusExport}
-          label={
-            <p className="flex gap-1 items-center">
-              {statusExport ? <>กำลังบันทึก...</> : <><Sheet size={15} strokeWidth={2} /> บันทึก Excel <ExternalLink size={10} /></>}
-            </p>
-          }
-        />
+        <div className="flex flex-col gap-1">
+          <Button
+            className="px-4 py-2 text-sm font-semibold disabled:opacity-50 rounded-md bg-green-800 hover:bg-green-700 transition-all text-white shadow-sm"
+            onClick={exportToExcel}
+            disabled={!dataSource || statusExport}
+            label={
+              <p className="flex gap-1 items-center">
+                {statusExport ? <>กำลังสร้างไฟล์ {progress}%</> : <><Sheet size={15} strokeWidth={2} /> บันทึก Excel <ExternalLink size={10} /></>}
+              </p>
+            }
+          />
+          {statusExport && (
+            <div className="w-full bg-gray-200 rounded h-1.5 overflow-hidden transition-all shadow hidden md:block">
+              <div
+                className="bg-green-700 h-1.5 transition-all duration-300 rounded-full"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ตัวเลือกวันที่ */}
@@ -593,12 +634,14 @@ export default function AttendancePage() {
           defaultPageSize: 10,
           showTotal: (total) => `ทั้งหมด ${total} รายการ`,
         }}
-        onRow={(record) => ({
-          onClick: () => {
-            router.push(`${pathname}/${record.attendance_record_id}`);
-          },
-          style: { cursor: 'pointer' }
-        })}
+        onRow={(record) => {
+          if (user?.status === "ADMIN") {
+            return {
+              onClick: () => router.push(`${pathname}/${record.attendance_record_id}`)
+            };
+          }
+          return {}; // สำหรับ non-ADMIN ต้องคืน object เปล่าด้วย
+        }}
       />
     </div>
   );

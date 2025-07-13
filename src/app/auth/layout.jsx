@@ -19,20 +19,20 @@ export default function Layout({children}) { // เปลี่ยนชื่�
   }
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    // if (typeof window !== 'undefined') {
       if (localStorage.getItem("isAuthen")) {
         setIsAuthen(JSON.parse(localStorage.getItem("isAuthen")));
         setIsAuthenticated(true);
       }
-    }
+    // }
     setHasCheckedAuth(true);
   }, []);
 
   if (hasCheckedAuth && isAuthenticated) {
     if (typeof window !== 'undefined' && window.history.length > 1) {
       router.back();
-    } else if (setIsAuthen?.status) {
-      router.push(`/${setIsAuthen?.status?.toLowerCase()}`);
+    } else if (isAuthen?.status) {
+      router.push(`/${isAuthen?.status?.toLowerCase()}`);
     } else {
       router.push("/auth/login");
     }

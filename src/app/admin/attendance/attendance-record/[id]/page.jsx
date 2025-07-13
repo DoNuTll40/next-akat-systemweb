@@ -103,7 +103,7 @@ export default function AttendanceDetailPage() {
     {
       key: '1',
       label: (
-        <span className="flex items-center gap-1 text-sm font-bold text-gray-800">
+        <span className="flex items-center gap-1 text-sm font-bold text-gray-800 select-none">
           <User size={16} strokeWidth={3} className="text-gray-600" /> ข้อมูลทั่วไป
         </span>
       ),
@@ -117,7 +117,7 @@ export default function AttendanceDetailPage() {
     {
       key: '2',
       label: (
-        <span className="flex items-center gap-1 text-sm font-bold text-green-700">
+        <span className="flex items-center gap-1 text-sm font-bold text-green-700 select-none">
           <Clock size={16} strokeWidth={3} className="text-green-700" /> รายละเอียดการเข้างาน
         </span>
       ),
@@ -164,7 +164,7 @@ export default function AttendanceDetailPage() {
     {
       key: '3',
       label: (
-        <span className="flex items-center gap-1 text-sm font-bold text-red-700">
+        <span className="flex items-center gap-1 text-sm font-bold text-red-700 select-none">
           <Clock size={16} strokeWidth={3} className="text-red-700" /> รายละเอียดการออกงาน
         </span>
       ),
@@ -211,7 +211,7 @@ export default function AttendanceDetailPage() {
     {
       key: '4',
       label: (
-        <span className="flex items-center gap-1 text-sm font-bold text-gray-800">
+        <span className="flex items-center gap-1 text-sm font-bold text-gray-800 select-none">
           <ClipboardList size={16} strokeWidth={3} className="text-gray-600" /> ข้อมูลการบันทึก
         </span>
       ),
@@ -230,7 +230,7 @@ export default function AttendanceDetailPage() {
       <div className="flex justify-between items-center pb-2 border-b border-gray-200">
         <div>
           <h1 className="text-xl font-bold text-blue-900">
-            รายละเอียดการลงเวลา
+            รายละเอียดการลงเวลา (Admin Only)
           </h1>
           <p className="mt-1 text-base font-medium text-gray-700">
             {data.users?.prefixes?.prefix_name || ''}{data.users?.fullname_thai || 'ไม่ระบุชื่อ'}

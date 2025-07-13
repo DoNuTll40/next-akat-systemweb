@@ -1,7 +1,7 @@
 {
   "name": "Akathospital System",
   "short_name": "Akathospital System",
-  "start_url": "/hospital/admin",
+  "start_url": "/hospital/auth/login",
   "display": "standalone",
   "icons": [
     {
