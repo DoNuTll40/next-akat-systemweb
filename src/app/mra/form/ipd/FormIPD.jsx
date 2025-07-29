@@ -912,8 +912,8 @@ export default function FormIPD() {
               onMouseUp={ (e) => ripple.create(e, "light") }
               onClick={hdlPreSubmit}
               style={{
-                backgroundColor: themeMRA.headerTableBg,
-                color: themeMRA.textHeaderTable
+                backgroundColor: themeMRA?.headerTableBg,
+                color: themeMRA?.textHeaderTable
               }}
               >{output?.review_status_id ? "บันทึก" : "บันทึกฉบับร่าง"}</button>
           </div>
