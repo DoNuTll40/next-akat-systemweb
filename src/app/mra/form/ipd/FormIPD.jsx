@@ -692,7 +692,7 @@ export default function FormIPD() {
             className="bg-white border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5 disabled:bg-gray-100 disabled:cursor-not-allowed"
             type="text"
             style={{
-              borderColor: themeMRA.activeBg,
+              borderColor: themeMRA?.activeBg,
             }}
             value={hospital?.hcode || ""}
             readOnly
@@ -707,7 +707,7 @@ export default function FormIPD() {
             className="bg-white border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5 disabled:bg-gray-100 disabled:cursor-not-allowed"
             type="text"
             style={{
-              borderColor: themeMRA.activeBg,
+              borderColor: themeMRA?.activeBg,
             }}
             value={hospital?.hcode_name || ""}
             readOnly
@@ -723,7 +723,7 @@ export default function FormIPD() {
           className="bg-white border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5 disabled:bg-gray-100 disabled:cursor-not-allowed"
           type="text"
           style={{
-            borderColor: themeMRA.activeBg,
+            borderColor: themeMRA?.activeBg,
           }}
           value={dataAn?.fullname || ""}
           placeholder="ชื่อ - สกุล"
@@ -738,8 +738,8 @@ export default function FormIPD() {
             className="bg-white border text-gray-900 text-sm rounded-lg focus:ring ring-offset-1 block w-full px-2.5 py-1.5"
             ref={inputRef}
             style={{
-              borderColor: themeMRA.activeBg,
-              "--tw-ring-color": themeMRA.activeBg,
+              borderColor: themeMRA?.activeBg,
+              "--tw-ring-color": themeMRA?.activeBg,
             }}
             type="text"
             placeholder="AN"
@@ -761,7 +761,7 @@ export default function FormIPD() {
             className="bg-white border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5 disabled:bg-gray-100 disabled:cursor-not-allowed"
             type="text"
             style={{
-              borderColor: themeMRA.activeBg,
+              borderColor: themeMRA?.activeBg,
             }}
             placeholder="HN"
             value={dataAn?.hn || ""}
@@ -777,7 +777,7 @@ export default function FormIPD() {
             className="bg-white border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5 disabled:bg-gray-100 disabled:cursor-not-allowed"
             type="text"
             style={{
-              borderColor: themeMRA.activeBg,
+              borderColor: themeMRA?.activeBg,
             }}
             placeholder="Date admitted"
             value={dataAn?.regdate ? moment(dataAn?.regdate).add(543, "year").locale("th").format("DD/MM/YYYY") : ""}
@@ -793,7 +793,7 @@ export default function FormIPD() {
             className="bg-white border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5 disabled:bg-gray-100 disabled:cursor-not-allowed"
             type="text"
             style={{
-              borderColor: themeMRA.activeBg,
+              borderColor: themeMRA?.activeBg,
             }}
             placeholder="Date discharged"
             value={dataAn?.dchdate ? moment(dataAn?.dchdate).add(543, "year").locale("th").format("DD/MM/YYYY") : ""}
@@ -855,9 +855,9 @@ export default function FormIPD() {
                     type="checkbox" 
                     id={`overall_finding_${item?.overall_finding?.overall_finding_id}`} 
                     style={{
-                      backgroundColor: selectOverallFinding.some(f => f.overall_finding_id === item?.overall_finding?.overall_finding_id) ? themeMRA.activeBg : "transparent",
-                      borderColor: themeMRA.activeBg,
-                      "--tw-ring-color": themeMRA.activeBg,
+                      backgroundColor: selectOverallFinding.some(f => f.overall_finding_id === item?.overall_finding?.overall_finding_id) ? themeMRA?.activeBg : "transparent",
+                      borderColor: themeMRA?.activeBg,
+                      "--tw-ring-color": themeMRA?.activeBg,
                     }}
                     onChange={() => hdlToggleOverallFinding(item, item.form_ipd_overall_finding_result_id)}
                     defaultChecked={selectOverallFinding.some(f => f.overall_finding_id === item?.overall_finding?.overall_finding_id) || item?.overall_finding_result}
@@ -879,9 +879,9 @@ export default function FormIPD() {
                       name="review-status" 
                       onChange={() => { setSelectedReviewStatus(item?.review_status_id), hdlToggleReviewStatus(item) }}
                       style={{
-                        backgroundColor: selectedItem?.review_status_id === item?.review_status_id ? themeMRA.activeBg : "transparent",
-                        borderColor: themeMRA.activeBg,
-                        "--tw-ring-color": themeMRA.activeBg,
+                        backgroundColor: selectedItem?.review_status_id === item?.review_status_id ? themeMRA?.activeBg : "transparent",
+                        borderColor: themeMRA?.activeBg,
+                        "--tw-ring-color": themeMRA?.activeBg,
                       }}
                     />
                     {item?.review_status_name} ({item?.review_status_description})
@@ -894,8 +894,8 @@ export default function FormIPD() {
                       className="bg-white border text-gray-900 text-sm rounded-lg focus:ring ring-offset-1 block w-full px-2.5 py-1.5"
                       type="text"
                       style={{
-                        borderColor: themeMRA.activeBg,
-                        "--tw-ring-color": themeMRA.activeBg,
+                        borderColor: themeMRA?.activeBg,
+                        "--tw-ring-color": themeMRA?.activeBg,
                       }}
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}

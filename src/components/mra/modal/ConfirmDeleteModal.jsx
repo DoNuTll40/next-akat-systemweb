@@ -73,8 +73,8 @@ export default function ConfirmDeleteModal({ showModalDelete, setShowModalDelete
                     value={inputConfirmAn} 
                     onChange={(e) => setInputConfirmAn(e.target.value)} 
                     style={{
-                        borderColor: inputConfirmAn === "" ? themeMRA.activeBg : anMatch ? themeMRA.activeBg : "red",
-                        "--tw-ring-color": inputConfirmAn === "" ? themeMRA.activeBg : anMatch ? themeMRA.activeBg : "red",
+                        borderColor: inputConfirmAn === "" ? themeMRA?.activeBg : anMatch ? themeMRA?.activeBg : "red",
+                        "--tw-ring-color": inputConfirmAn === "" ? themeMRA?.activeBg : anMatch ? themeMRA?.activeBg : "red",
                     }}
                     placeholder="AN"
                 />
@@ -89,8 +89,8 @@ export default function ConfirmDeleteModal({ showModalDelete, setShowModalDelete
                             type={showPassword ? "text" : "password"} 
                             value={inputPassword}
                             style={{
-                            borderColor: themeMRA.activeBg,
-                            "--tw-ring-color": themeMRA.activeBg,
+                            borderColor: themeMRA?.activeBg,
+                            "--tw-ring-color": themeMRA?.activeBg,
                             }}
                             onChange={(e) => setInputPassword(e.target.value)} 
                             placeholder="รหัสผ่าน"
@@ -107,9 +107,9 @@ export default function ConfirmDeleteModal({ showModalDelete, setShowModalDelete
                     onMouseUp={(e) => ripple.create(e, "light")}
                     onClick={handleConfirmDelete}
                     style={{
-                        backgroundColor: themeMRA.headerTableBg,
-                        color: themeMRA.textHeaderTable,
-                        borderColor: themeMRA.headerTableBg
+                        backgroundColor: themeMRA?.headerTableBg,
+                        color: themeMRA?.textHeaderTable,
+                        borderColor: themeMRA?.headerTableBg
                     }}
                     >{isDeleting ? "กำลังลบ..." : "ยืนยันการลบ"}</button>
                 <button 
@@ -118,8 +118,8 @@ export default function ConfirmDeleteModal({ showModalDelete, setShowModalDelete
                     onMouseUp={(e) => ripple.create(e, "light")}
                     style={{
                         // backgroundColor: themeMRA.headerTableBg,
-                        color: themeMRA.activeBg,
-                        borderColor: themeMRA.headerTableBg
+                        color: themeMRA?.activeBg,
+                        borderColor: themeMRA?.headerTableBg
                     }}
                     >ยกเลิก</button>
             </div>
